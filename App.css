@@ -1,0 +1,6 @@
+.custom-modal-card {
+  /* Allow the modal to size itself via Tailwind classes (max-h) */
+  width: 100%;
+  height: 100vh;
+  overflow: auto;
+}

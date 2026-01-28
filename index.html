@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0" />
+    <title>My Valentine</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400;700&family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            fontFamily: {
+              handwriting: ['"Dancing Script"', 'cursive'],
+              sans: ['"Nunito"', 'sans-serif'],
+            },
+            colors: {
+              // Dynamic Love Palette mapped to CSS Variables
+              love: {
+                50: 'var(--love-50)',
+                100: 'var(--love-100)',
+                200: 'var(--love-200)',
+                300: 'var(--love-300)',
+                400: 'var(--love-400)',
+                500: 'var(--love-500)',
+                600: 'var(--love-600)',
+                700: 'var(--love-700)',
+                800: 'var(--love-800)',
+                900: 'var(--love-900)',
+              }
+            },
+            animation: {
+              'bounce-slow': 'bounce 2s infinite',
+              'pulse-fast': 'pulse 1.5s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+              'float': 'float 6s ease-in-out infinite',
+              'fade-in-up': 'fadeInUp 0.5s ease-out forwards',
+              'fade-out': 'fadeOut 0.3s ease-out forwards',
+              'wiggle': 'wiggle 1s ease-in-out infinite',
+            },
+            keyframes: {
+              float: {
+                '0%, 100%': { transform: 'translateY(0)' },
+                '50%': { transform: 'translateY(-20px)' },
+              },
+              fadeInUp: {
+                '0%': { opacity: '0', transform: 'translateY(20px)' },
+                '100%': { opacity: '1', transform: 'translateY(0)' },
+              },
+              fadeOut: {
+                '0%': { opacity: '1', transform: 'scale(1)' },
+                '100%': { opacity: '0', transform: 'scale(0.95)' },
+              },
+              wiggle: {
+                '0%, 100%': { transform: 'rotate(-3deg)' },
+                '50%': { transform: 'rotate(3deg)' },
+              }
+            }
+          }
+        }
+      }
+    </script>
+    <style>
+      :root {
+        /* Default Theme (Classic Rose) */
+        --love-50: #fff1f2;
+        --love-100: #ffe4e6;
+        --love-200: #fecdd3;
+        --love-300: #fda4af;
+        --love-400: #fb7185;
+        --love-500: #f43f5e;
+        --love-600: #e11d48;
+        --love-700: #be123c;
+        --love-800: #9f1239;
+        --love-900: #881337;
+      }
+
+      body {
+        background-color: var(--love-50);
+        color: var(--love-900);
+        transition: background-color 0.5s ease, color 0.5s ease;
+        -webkit-tap-highlight-color: transparent;
+      }
+      
+      /* Hide scrollbar for clean mobile look */
+      ::-webkit-scrollbar {
+        width: 0px;
+        background: transparent;
+      }
+    </style>
+  <script type="importmap">
+{
+  "imports": {
+    "react-dom/": "https://esm.sh/react-dom@^19.2.4/",
+    "lucide-react": "https://esm.sh/lucide-react@^0.563.0",
+    "react/": "https://esm.sh/react@^19.2.4/",
+    "react": "https://esm.sh/react@^19.2.4"
+  }
+}
+</script>
+</head>
+  <body>
+    <div id="root"></div>
+  </body>
+</html>
