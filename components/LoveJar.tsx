@@ -24,11 +24,11 @@ export const LoveJar: React.FC = () => {
       {/* Floating Jar Button */}
       <button 
         onClick={pullReason}
-        className="fixed bottom-4 left-4 z-[60] w-14 h-14 bg-white/90 backdrop-blur-md rounded-2xl shadow-xl flex items-center justify-center border-2 border-love-100 group active:scale-90 transition-transform"
+        className="fixed bottom-4 left-4 z-[60] w-14 h-14 bg-love-100/90 backdrop-blur-md rounded-2xl shadow-xl flex items-center justify-center border-2 border-love-200 group active:scale-90 transition-transform"
       >
         <div className="relative">
-          <svg viewBox="0 0 100 120" className="w-10 h-10 fill-love-50 overflow-visible stroke-love-200" strokeWidth="2">
-             <path d="M 20 20 L 80 20 Q 90 20, 90 30 L 90 100 Q 90 115, 75 115 L 25 115 Q 10 115, 10 100 L 10 30 Q 10 20, 20 20 Z" fill="white" />
+          <svg viewBox="0 0 100 120" className="w-10 h-10 fill-love-50 overflow-visible stroke-love-300" strokeWidth="2">
+             <path d="M 20 20 L 80 20 Q 90 20, 90 30 L 90 100 Q 90 115, 75 115 L 25 115 Q 10 115, 10 100 L 10 30 Q 10 20, 20 20 Z" fill="var(--love-50)" />
              <path d="M 25 10 L 75 10 L 75 22 L 25 22 Z" fill="var(--love-400)" />
              <Heart className="w-30 h-30 text-love-500 fill-love-200" style={{ transform: 'translate(30px, 45px) scale(1.5)' }} />
           </svg>
@@ -43,8 +43,8 @@ export const LoveJar: React.FC = () => {
         <div className="fixed inset-0 z-[100] flex items-center justify-center p-6 animate-fade-in">
           <div className="absolute inset-0 bg-love-900/60 backdrop-blur-sm" onClick={() => setIsOpen(false)}></div>
           
-          <div className="relative bg-white rounded-3xl p-8 shadow-2xl max-w-xs w-full text-center border-4 border-love-100 animate-fade-in-up">
-            <div className="absolute -top-10 left-1/2 -translate-x-1/2 w-20 h-20 bg-love-500 rounded-full border-4 border-white flex items-center justify-center shadow-lg">
+          <div className="relative bg-love-50 rounded-3xl p-8 shadow-2xl max-w-xs w-full text-center border-4 border-love-200 animate-fade-in-up">
+            <div className="absolute -top-10 left-1/2 -translate-x-1/2 w-20 h-20 bg-love-500 rounded-full border-4 border-love-50 flex items-center justify-center shadow-lg">
                 <Heart className="text-white w-10 h-10 fill-white animate-pulse" />
             </div>
             
@@ -65,7 +65,7 @@ export const LoveJar: React.FC = () => {
             
             <button 
               onClick={pullReason}
-              className="mt-3 text-love-400 text-sm font-bold flex items-center justify-center gap-1 hover:text-love-600"
+              className="mt-3 text-love-600 text-sm font-bold flex items-center justify-center gap-1 hover:text-love-800"
             >
               Give me another? <Heart size={12} fill="currentColor" />
             </button>

@@ -7,8 +7,9 @@ import { MusicPlayer } from './components/MusicPlayer';
 import { LoveJar } from './components/LoveJar';
 import { ThemePicker } from './components/ThemePicker';
 import EmojiRain from './components/EmojiRain';
+import { Toast } from './components/Toast';
 import { FloatingBackground } from './components/FloatingBackground';
-import { VALENTINE_DAYS, THEMES } from './constants';
+import { VALENTINE_DAYS, THEMES, LOCKED_MESSAGES } from './constants';
 import { DayData, DayState, StoredState } from './types';
 import { Heart, Settings, Wand2 } from 'lucide-react';
 import "./App.css"
@@ -45,6 +46,14 @@ function App() {
   const [isAdminOpen, setIsAdminOpen] = useState(false);
   const [isThemePickerOpen, setIsThemePickerOpen] = useState(false);
   const [showerEmoji, setShowerEmoji] = useState<string | null>(null);
+  const [lockedToastMessage, setLockedToastMessage] = useState<string | null>(null);
+
+  // Initialize avatar at the highest opened day (or the first day if none)
+  const [currentAvatarIndex, setCurrentAvatarIndex] = useState(() => {
+    const openedIds = Object.keys(openedDays).map(Number);
+    if (openedIds.length === 0) return 0;
+    return Math.max(...openedIds) - 1; // Convert ID (1-based) to Index (0-based)
+  });
 
   useEffect(() => {
     const theme = THEMES.find(t => t.id === currentThemeId) || THEMES[0];
@@ -74,9 +83,31 @@ function App() {
   }, [openedDays]);
 
   const handleDayClick = (day: DayData) => {
-    if (getDayState(day) === DayState.LOCKED) return;
-    setSelectedDay(day);
-    setIsModalOpen(true);
+    const state = getDayState(day);
+    if (state === DayState.LOCKED) {
+        // Show cheesy toast
+        const randomMsg = LOCKED_MESSAGES[Math.floor(Math.random() * LOCKED_MESSAGES.length)];
+        setLockedToastMessage(randomMsg);
+        return;
+    }
+
+    const clickedIndex = effectiveDays.findIndex(d => d.id === day.id);
+
+    // If clicking a new unlocked day that is AHEAD of current position
+    if (state === DayState.UNLOCKED && clickedIndex > currentAvatarIndex) {
+      // 1. Move Avatar
+      setCurrentAvatarIndex(clickedIndex);
+      
+      // 2. Wait for animation (2s) then Open Modal
+      setTimeout(() => {
+        setSelectedDay(day);
+        setIsModalOpen(true);
+      }, 2000);
+    } else {
+      // If clicking history (already opened) or current spot, open immediately
+      setSelectedDay(day);
+      setIsModalOpen(true);
+    }
   };
 
   const handleModalClose = (emoji: string) => {
@@ -122,7 +153,12 @@ function App() {
       </header>
 
       <main className="relative z-10">
-        <Timeline days={effectiveDays} getDoyState={getDayState} onDayClick={handleDayClick} />
+        <Timeline 
+          days={effectiveDays} 
+          getDoyState={getDayState} 
+          onDayClick={handleDayClick} 
+          avatarIndex={currentAvatarIndex}
+        />
       </main>
 
       {selectedDay && (
@@ -131,6 +167,13 @@ function App() {
           isOpen={isModalOpen} 
           onClose={handleModalClose}
           dayState={openedDays[selectedDay.id] ? DayState.OPENED : DayState.UNLOCKED}
+        />
+      )}
+
+      {lockedToastMessage && (
+        <Toast 
+            message={lockedToastMessage} 
+            onClose={() => setLockedToastMessage(null)} 
         />
       )}
 

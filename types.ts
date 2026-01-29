@@ -8,6 +8,7 @@ export interface DayData {
   fullDate: string;
   icon: React.ReactNode; 
   emoji: string | React.ReactNode;
+  loadingMessage: string;
   
   view1: {
     gifUrl: string;
@@ -19,8 +20,9 @@ export interface DayData {
     images: string[];
     text: string;
     challenge?: string;
-    audioUrl?: string;
     aiPromptTheme: string; // Theme used to guide Gemini for this specific day
+    buttonLabel: string;
+    closingSalutation: string;
   };
 }
 

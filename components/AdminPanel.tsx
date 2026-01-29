@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import { DayData } from '../types';
 import { THEMES } from '../constants';
@@ -59,7 +60,7 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4">
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-love-900/60 backdrop-blur-sm p-4">
       <div className="bg-love-50 w-full max-w-md rounded-2xl shadow-2xl overflow-hidden max-h-[85vh] flex flex-col border border-love-200">
         {/* Header */}
         <div className="bg-love-900 text-love-50 p-4 flex justify-between items-center shadow-md">
@@ -71,13 +72,13 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({
         <div className="flex border-b border-love-200 bg-love-100">
           <button 
             onClick={() => setActiveTab('themes')}
-            className={`flex-1 py-3 font-semibold flex justify-center items-center gap-2 transition-colors ${activeTab === 'themes' ? 'text-love-700 border-b-2 border-love-600 bg-love-50' : 'text-love-400 hover:bg-love-50/50'}`}
+            className={`flex-1 py-3 font-semibold flex justify-center items-center gap-2 transition-colors ${activeTab === 'themes' ? 'text-love-700 border-b-2 border-love-600 bg-love-50' : 'text-love-500 hover:bg-love-100/50'}`}
           >
             <Palette className="w-4 h-4" /> Themes
           </button>
           <button 
             onClick={() => setActiveTab('dates')}
-            className={`flex-1 py-3 font-semibold flex justify-center items-center gap-2 transition-colors ${activeTab === 'dates' ? 'text-love-700 border-b-2 border-love-600 bg-love-50' : 'text-love-400 hover:bg-love-50/50'}`}
+            className={`flex-1 py-3 font-semibold flex justify-center items-center gap-2 transition-colors ${activeTab === 'dates' ? 'text-love-700 border-b-2 border-love-600 bg-love-50' : 'text-love-500 hover:bg-love-100/50'}`}
           >
             <Calendar className="w-4 h-4" /> Dates
           </button>
@@ -94,15 +95,15 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({
                   onClick={() => onSelectTheme(theme.id)}
                   className={`
                     relative p-4 rounded-xl border-2 flex items-center justify-between transition-all duration-300
-                    ${currentThemeId === theme.id ? 'border-love-600 bg-white shadow-lg scale-[1.02]' : 'border-love-100 bg-white/60 shadow-sm hover:bg-white'}
+                    ${currentThemeId === theme.id ? 'border-love-600 bg-love-100 shadow-lg scale-[1.02]' : 'border-love-200 bg-love-100/60 shadow-sm hover:bg-love-100'}
                   `}
                 >
                   <div className="flex items-center gap-3">
                     {/* Color Swatch Preview */}
                     <div className="flex -space-x-2">
-                      <div className="w-8 h-8 rounded-full border-2 border-white shadow-sm" style={{ backgroundColor: theme.colors[500] }}></div>
-                      <div className="w-8 h-8 rounded-full border-2 border-white shadow-sm" style={{ backgroundColor: theme.colors[300] }}></div>
-                      <div className="w-8 h-8 rounded-full border-2 border-white shadow-sm" style={{ backgroundColor: theme.colors[800] }}></div>
+                      <div className="w-8 h-8 rounded-full border-2 border-love-50 shadow-sm" style={{ backgroundColor: theme.colors[500] }}></div>
+                      <div className="w-8 h-8 rounded-full border-2 border-love-50 shadow-sm" style={{ backgroundColor: theme.colors[300] }}></div>
+                      <div className="w-8 h-8 rounded-full border-2 border-love-50 shadow-sm" style={{ backgroundColor: theme.colors[800] }}></div>
                     </div>
                     <span className={`font-bold ${currentThemeId === theme.id ? 'text-love-800' : 'text-love-600'}`}>{theme.name}</span>
                   </div>
@@ -116,23 +117,23 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({
 
           {activeTab === 'dates' && (
             <div className="space-y-4">
-              <p className="text-xs text-love-400 mb-2 italic">Adjust dates to test the timeline journey.</p>
+              <p className="text-xs text-love-500 mb-2 italic">Adjust dates to test the timeline journey.</p>
               {days.map(day => {
                 const currentVal = tempOverrides[day.id] || day.fullDate;
                 return (
-                  <div key={day.id} className="flex flex-col space-y-1 bg-white p-3 rounded-xl shadow-sm border border-love-100">
+                  <div key={day.id} className="flex flex-col space-y-1 bg-love-100/50 p-3 rounded-xl shadow-sm border border-love-100">
                     <label className="text-sm font-semibold text-love-800 flex justify-between">
                       <span className="flex items-center gap-2">
                          <span className="text-love-500">{day.icon}</span>
                          {day.dayName}
                       </span>
-                      <span className="text-love-300 font-normal text-xs">Def: {day.fullDate}</span>
+                      <span className="text-love-500 font-normal text-xs">Def: {day.fullDate}</span>
                     </label>
                     <input 
                       type="date" 
                       value={currentVal}
                       onChange={(e) => handleDateChange(day.id, e.target.value)}
-                      className="w-full border border-love-200 rounded-lg p-2 text-love-700 bg-love-50 focus:ring-2 focus:ring-love-400 focus:outline-none focus:bg-white transition-colors"
+                      className="w-full border border-love-200 rounded-lg p-2 text-love-700 bg-love-50 focus:ring-2 focus:ring-love-400 focus:outline-none focus:bg-love-100 transition-colors"
                     />
                   </div>
                 );

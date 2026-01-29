@@ -1,10 +1,13 @@
-import React, { useEffect, useRef } from 'react';
+
+import React, { useEffect, useRef, useState } from 'react';
 import { DayData, DayState } from '../types';
+import { Clock, Sparkles } from 'lucide-react';
 
 interface TimelineProps {
   days: DayData[];
   getDoyState: (day: DayData) => DayState;
   onDayClick: (day: DayData) => void;
+  avatarIndex: number;
 }
 
 // Ghibli Style Boy
@@ -41,22 +44,14 @@ const BoyFace = () => (
 // Ghibli Style Girl
 const GirlFace = () => (
   <svg viewBox="0 0 100 100" className="w-full h-full drop-shadow-md overflow-visible">
-    <defs>
-      <linearGradient id="ghibliHairGrad" x1="0" x2="0" y1="0" y2="1">
-        <stop offset="0%" stopColor="#1a1a1a" />
-        <stop offset="70%" stopColor="#3E2723" />
-        <stop offset="100%" stopColor="#8D6E63" />
-      </linearGradient>
-    </defs>
-
     {/* Hair Back - Full & Round */}
-    <path d="M 10 50 Q 5 85 25 95 L 75 95 Q 95 85 90 50 Q 90 10 50 10 Q 10 10 10 50" fill="url(#ghibliHairGrad)" />
+    <path d="M 10 50 Q 5 85 25 95 L 75 95 Q 95 85 90 50 Q 90 10 50 10 Q 10 10 10 50" fill="#3E2723" />
     
     {/* Face Shape */}
     <path d="M 22 50 C 22 80, 32 90, 50 92 C 68 90, 78 80, 78 50 C 78 38, 50 35, 22 50" fill="#FEEBC8" />
 
     {/* Bangs - Straight cut with slight curve */}
-    <path d="M 15 50 Q 30 60 50 55 Q 70 60 85 50" fill="url(#ghibliHairGrad)" />
+    <path d="M 15 50 Q 30 60 50 55 Q 70 60 85 50" fill="#3E2723" />
 
     {/* Eyes - Slightly larger */}
     <circle cx="36" cy="62" r="4.5" fill="#1A202C" />
@@ -74,7 +69,7 @@ const GirlFace = () => (
 );
 
 const CoupleAvatars = () => (
-  <div className="relative w-28 h-16 pointer-events-none z-30 -mb-3">
+  <div className="relative w-28 h-16 pointer-events-none z-30 -mb-3 scale-110">
     {/* Bodies & Hands SVG Layer */}
     <svg viewBox="0 0 100 60" className="absolute bottom-0 left-0 w-full h-full overflow-visible drop-shadow-sm">
        {/* Boy Body (Left) */}
@@ -111,16 +106,120 @@ const CoupleAvatars = () => (
   </div>
 );
 
-export const Timeline: React.FC<TimelineProps> = ({ days, getDoyState, onDayClick }) => {
+// Countdown Hook
+const useCountdown = (targetDate: string) => {
+  const [timeLeft, setTimeLeft] = useState<{h: number, m: number, s: number} | null>(null);
+
+  useEffect(() => {
+    const target = new Date(targetDate + 'T00:00:00').getTime();
+
+    const interval = setInterval(() => {
+      const now = new Date().getTime();
+      const distance = target - now;
+
+      if (distance < 0) {
+        setTimeLeft(null);
+        clearInterval(interval);
+      } else {
+        setTimeLeft({
+          h: Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)),
+          m: Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60)),
+          s: Math.floor((distance % (1000 * 60)) / 1000)
+        });
+      }
+    }, 1000);
+
+    return () => clearInterval(interval);
+  }, [targetDate]);
+
+  return timeLeft;
+};
+
+const CountdownDisplay = ({ targetDate }: { targetDate: string }) => {
+  const timeLeft = useCountdown(targetDate);
+  if (!timeLeft) return (
+    <span className="inline-flex items-center gap-1 px-3 py-1.5 bg-gradient-to-r from-love-400 to-love-600 text-white rounded-full shadow-lg text-xs font-bold animate-pulse border-2 border-white/50">
+      <Sparkles size={12} fill="currentColor" /> Unlocked!
+    </span>
+  );
+
+  return (
+    <div className="flex flex-col items-center animate-fade-in-up">
+      <div className="relative group">
+        {/* Glow Effect */}
+        <div className="absolute -inset-1 bg-gradient-to-r from-love-300 to-love-500 rounded-2xl blur opacity-30 group-hover:opacity-50 transition duration-1000"></div>
+        
+        {/* Main Card */}
+        <div className="relative flex items-center gap-3 px-5 py-3 bg-love-100/90 backdrop-blur-xl rounded-2xl shadow-[0_8px_30px_rgb(0,0,0,0.12)] border border-love-200/60">
+          
+          {/* Hours */}
+          <div className="flex flex-col items-center">
+            <div className="bg-love-50 rounded-lg p-1 min-w-[32px] flex justify-center border border-love-200">
+               <span className="text-xl font-bold text-love-600 font-mono leading-none">
+                 {timeLeft.h.toString().padStart(2,'0')}
+               </span>
+            </div>
+            <span className="text-[9px] font-bold text-love-500 uppercase tracking-wider mt-1">Hrs</span>
+          </div>
+
+          <div className="text-love-500 font-bold text-lg -mt-3 animate-pulse">:</div>
+
+          {/* Minutes */}
+          <div className="flex flex-col items-center">
+            <div className="bg-love-50 rounded-lg p-1 min-w-[32px] flex justify-center border border-love-200">
+               <span className="text-xl font-bold text-love-600 font-mono leading-none">
+                 {timeLeft.m.toString().padStart(2,'0')}
+               </span>
+            </div>
+            <span className="text-[9px] font-bold text-love-500 uppercase tracking-wider mt-1">Min</span>
+          </div>
+
+          <div className="text-love-500 font-bold text-lg -mt-3 animate-pulse">:</div>
+
+          {/* Seconds */}
+          <div className="flex flex-col items-center">
+            <div className="bg-love-50 rounded-lg p-1 min-w-[32px] flex justify-center border border-love-200">
+               <span className="text-xl font-bold text-love-500 font-mono leading-none tabular-nums">
+                 {timeLeft.s.toString().padStart(2,'0')}
+               </span>
+            </div>
+            <span className="text-[9px] font-bold text-love-500 uppercase tracking-wider mt-1">Sec</span>
+          </div>
+
+        </div>
+        
+        {/* Floating Badge */}
+        <div className="absolute -top-3 left-1/2 -translate-x-1/2 bg-gradient-to-r from-love-500 to-love-600 text-white text-[9px] font-bold px-3 py-1 rounded-full shadow-lg border-2 border-love-100 whitespace-nowrap flex items-center gap-1.5 z-10">
+          <Clock size={10} className="animate-spin-slow" style={{ animationDuration: '4s' }} /> 
+          <span>COMING SOON</span>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export const Timeline: React.FC<TimelineProps> = ({ days, getDoyState, onDayClick, avatarIndex }) => {
   const dayRefs = useRef<(HTMLDivElement | null)[]>([]);
-  
+  const [avatarTop, setAvatarTop] = useState(0);
+
   const lastUnlockedIndex = days.reduce((acc, day, index) => {
     return getDoyState(day) !== DayState.LOCKED ? index : acc;
   }, -1);
   
   const progress = Math.max(0, lastUnlockedIndex + 1);
 
-  // Auto-scroll effect
+  // Find the FIRST locked day to show the countdown
+  const nextLockedIndex = days.findIndex(day => getDoyState(day) === DayState.LOCKED);
+
+  // Calculate the exact Top position for the avatar based on the current index
+  useEffect(() => {
+    const activeRef = dayRefs.current[avatarIndex];
+    if (activeRef) {
+      setAvatarTop(activeRef.offsetTop + 10);
+    }
+  }, [avatarIndex]);
+
+  // Auto-scroll to the latest unlocked day on load
   useEffect(() => {
     if (lastUnlockedIndex >= 0 && dayRefs.current[lastUnlockedIndex]) {
       const timer = setTimeout(() => {
@@ -128,7 +227,7 @@ export const Timeline: React.FC<TimelineProps> = ({ days, getDoyState, onDayClic
           behavior: 'smooth', 
           block: 'center' 
         });
-      }, 500); // Slight delay to ensure layout is ready
+      }, 500);
       return () => clearTimeout(timer);
     }
   }, [lastUnlockedIndex]);
@@ -145,7 +244,6 @@ export const Timeline: React.FC<TimelineProps> = ({ days, getDoyState, onDayClic
     }
     
     if (state === DayState.UNLOCKED) {
-      // Hollow Effect
       return isString ? (
          <span className="text-3xl select-none animate-pulse" style={{ color: 'transparent', textShadow: '0 0 0 var(--love-500)' }}>{emoji}</span>
       ) : (
@@ -154,7 +252,6 @@ export const Timeline: React.FC<TimelineProps> = ({ days, getDoyState, onDayClic
     }
 
     if (state === DayState.OPENED) {
-       // Solid Effect
        return isString ? (
           <span className="text-3xl select-none drop-shadow-sm" style={{ color: 'transparent', textShadow: '0 0 0 white' }}>{emoji}</span>
        ) : (
@@ -162,6 +259,8 @@ export const Timeline: React.FC<TimelineProps> = ({ days, getDoyState, onDayClic
        );
     }
   };
+
+  const isAvatarLeft = avatarIndex % 2 === 0;
 
   return (
     <div className="relative py-10 px-4 max-w-md mx-auto min-h-screen">
@@ -182,7 +281,6 @@ export const Timeline: React.FC<TimelineProps> = ({ days, getDoyState, onDayClic
           />
         </defs>
 
-        {/* 1. Base Road */}
         <use href="#roadPath"
           fill="none"
           stroke="var(--love-300)" 
@@ -191,16 +289,14 @@ export const Timeline: React.FC<TimelineProps> = ({ days, getDoyState, onDayClic
           style={{ vectorEffect: 'non-scaling-stroke', opacity: 0.3 }} 
         />
 
-        {/* 2. Asphalt Road */}
         <use href="#roadPath"
           fill="none"
-          stroke="#525252"
+          stroke="var(--love-200)"
           strokeWidth="50"
           strokeLinecap="round"
           style={{ vectorEffect: 'non-scaling-stroke' }}
         />
 
-        {/* 3. Highlighted Road (Uses Love-600) */}
         <use href="#roadPath"
           fill="none"
           stroke="var(--love-600)"
@@ -213,10 +309,9 @@ export const Timeline: React.FC<TimelineProps> = ({ days, getDoyState, onDayClic
           style={{ vectorEffect: 'non-scaling-stroke' }}
         />
 
-        {/* 4. Center Line */}
         <use href="#roadPath"
           fill="none"
-          stroke="#fbbf24"
+          stroke="var(--love-400)"
           strokeWidth="2"
           strokeDasharray="10 10"
           strokeLinecap="round"
@@ -225,10 +320,24 @@ export const Timeline: React.FC<TimelineProps> = ({ days, getDoyState, onDayClic
       </svg>
 
       <div className="relative z-10 flex flex-col space-y-[56px] pt-12 pb-20">
+        
+        {/* Floating Avatar Container */}
+        <div 
+          className="absolute z-40 transition-all duration-[2000ms] ease-in-out"
+          style={{ 
+            top: avatarTop, 
+            left: isAvatarLeft ? '62%' : 'auto', 
+            right: isAvatarLeft ? 'auto' : '62%',
+            transform: 'translateY(-50%)'
+          }}
+        >
+          <CoupleAvatars />
+        </div>
+
         {days.map((day, index) => {
           const state = getDoyState(day);
           const isLeft = index % 2 === 0;
-          const isLastUnlocked = index === lastUnlockedIndex;
+          const isNextLocked = index === nextLockedIndex;
 
           return (
             <div 
@@ -241,55 +350,50 @@ export const Timeline: React.FC<TimelineProps> = ({ days, getDoyState, onDayClic
                 style={{ width: '55%' }} 
               >
                 
-                {/* Marker Button */}
-                <button
-                  onClick={() => onDayClick(day)}
-                  disabled={state === DayState.LOCKED}
-                  className={`
-                    relative flex-shrink-0 flex items-center justify-center w-16 h-16 rounded-full border-4 shadow-xl transition-all duration-500 transform z-20 overflow-hidden
-                    ${state === DayState.LOCKED ? 'bg-love-50 border-gray-300 opacity-80' : ''}
-                    ${state === DayState.UNLOCKED ? 'bg-love-50 border-love-500 scale-110 hover:scale-115 shadow-[0_0_15px_var(--love-300)]' : ''}
-                    ${state === DayState.OPENED ? 'bg-love-500 border-love-600 scale-100 shadow-inner' : ''}
-                  `}
-                >
-                  {state === DayState.UNLOCKED && (
-                    <>
-                       {/* Hollow Effect: Colored outline emoji inside light background */}
-                       <div className="absolute inset-0 rounded-full bg-love-100/30"></div>
-                       {/* Subtle outer ping for attention */}
-                       <div className="absolute -inset-1 rounded-full border-2 border-love-400 opacity-40 animate-ping"></div>
-                    </>
-                  )}
-                  
-                  {renderEmojiContent(day.emoji, state)}
+                {/* Marker & Timer Container */}
+                <div className="relative flex flex-col items-center z-20">
+                    <button
+                      onClick={() => onDayClick(day)}
+                      // disabled={state === DayState.LOCKED} // Removed so click event can fire for toast
+                      className={`
+                        relative flex-shrink-0 flex items-center justify-center w-16 h-16 rounded-full border-4 shadow-xl transition-all duration-500 transform overflow-hidden z-20
+                        ${state === DayState.LOCKED ? 'bg-love-50 border-gray-300 opacity-90 cursor-not-allowed' : ''}
+                        ${state === DayState.UNLOCKED ? 'bg-love-50 border-love-500 scale-110 hover:scale-115 shadow-[0_0_15px_var(--love-300)]' : ''}
+                        ${state === DayState.OPENED ? 'bg-love-500 border-love-600 scale-100 shadow-inner' : ''}
+                      `}
+                    >
+                      {state === DayState.UNLOCKED && (
+                        <>
+                           <div className="absolute inset-0 rounded-full bg-love-100/30"></div>
+                           <div className="absolute -inset-1 rounded-full border-2 border-love-400 opacity-40 animate-ping"></div>
+                        </>
+                      )}
+                      
+                      {renderEmojiContent(day.emoji, state)}
 
-                </button>
+                    </button>
+                    
+                    {/* Countdown Timer - Placed Below */}
+                    {isNextLocked && (
+                        <div className="absolute top-full mt-4 left-1/2 -translate-x-1/2 z-30 min-w-[180px]">
+                            <CountdownDisplay targetDate={day.fullDate} />
+                        </div>
+                    )}
+                </div>
                 
-                {/* Text Label Container (No Border/BG) */}
-                <div className={`relative group ${isLastUnlocked ? 'z-30' : 'z-10'}`}>
-                  
+                {/* Text Label */}
+                <div className={`relative group z-10`}>
                   <div className={`
                      flex flex-col p-2 min-w-[100px]
                      transition-all duration-500
                      ${state === DayState.LOCKED ? 'opacity-40 grayscale blur-[0.5px]' : 'opacity-100 transform hover:scale-105'}
                      ${isLeft ? 'items-start text-left' : 'items-end text-right'}
                   `}>
-                    <span className="font-bold text-love-400 text-xs uppercase tracking-wider mb-0.5">{day.date}</span>
-                    <span className="font-handwriting text-2xl text-love-700 font-bold leading-none drop-shadow-[0_2px_2px_rgba(255,255,255,0.8)]">
+                    <span className="font-bold text-love-600 text-xs uppercase tracking-wider mb-0.5">{day.date}</span>
+                    <span className="font-handwriting text-2xl text-love-800 font-bold leading-none drop-shadow-[0_2px_2px_rgba(255,255,255,0.8)]">
                       {day.dayName}
                     </span>
                   </div>
-
-                  {/* Couple Avatars Positioned Beside Text */}
-                  {isLastUnlocked && (
-                    <div className={`
-                      absolute top-1/2 -translate-y-1/2
-                      ${isLeft ? 'left-full ml-2' : 'right-full mr-2'}
-                    `}>
-                      <CoupleAvatars />
-                    </div>
-                  )}
-
                 </div>
               </div>
             </div>

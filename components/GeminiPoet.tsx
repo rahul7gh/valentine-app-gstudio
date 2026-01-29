@@ -61,7 +61,7 @@ export const GeminiPoet: React.FC<GeminiPoetProps> = ({ theme }) => {
           <div className="absolute inset-0 bg-white/20 translate-x-[-100%] animate-[shimmer_3s_infinite] pointer-events-none"></div>
         </button>
       ) : (
-        <div className="bg-white/60 backdrop-blur-sm border-2 border-love-200 rounded-3xl p-6 relative animate-fade-in shadow-inner">
+        <div className="bg-love-100/60 backdrop-blur-sm border-2 border-love-200 rounded-3xl p-6 relative animate-fade-in shadow-inner">
           <Quote className="absolute top-4 left-4 text-love-200 w-10 h-10 opacity-40" />
           <div className="relative z-10 text-center">
             <p className="font-handwriting text-2xl text-love-800 leading-relaxed italic whitespace-pre-wrap">
@@ -69,7 +69,7 @@ export const GeminiPoet: React.FC<GeminiPoetProps> = ({ theme }) => {
             </p>
             <button 
               onClick={() => setPoem(null)}
-              className="mt-4 text-xs font-bold text-love-400 uppercase tracking-widest hover:text-love-600 transition-colors"
+              className="mt-4 text-xs font-bold text-love-600 uppercase tracking-widest hover:text-love-800 transition-colors"
             >
               Write another?
             </button>
@@ -77,7 +77,7 @@ export const GeminiPoet: React.FC<GeminiPoetProps> = ({ theme }) => {
         </div>
       )}
       {error && (
-        <p className="text-center text-xs text-love-400 mt-2 italic px-4">{error}</p>
+        <p className="text-center text-xs text-love-500 mt-2 italic px-4">{error}</p>
       )}
       <style>{`
         @keyframes shimmer {
