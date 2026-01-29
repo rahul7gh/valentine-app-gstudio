@@ -38,7 +38,7 @@ function App() {
   });
 
   const [currentThemeId, setCurrentThemeId] = useState<string>(() => {
-    return localStorage.getItem(THEME_STORAGE_KEY) || 'classic-rose';
+    return localStorage.getItem(THEME_STORAGE_KEY) || 'midnight-passion';
   });
 
   const [selectedDay, setSelectedDay] = useState<DayData | null>(null);
@@ -133,7 +133,7 @@ function App() {
         <div className="max-w-md mx-auto px-4 py-3 flex items-center justify-between">
           <h1 className="text-2xl font-handwriting font-bold text-love-600 flex items-center gap-2 animate-pulse-fast">
             <Heart className="w-5 h-5 fill-love-500" />
-            Our Journey
+            Infinity & Beyond
           </h1>
           <div className="flex gap-1">
              <button 
@@ -174,6 +174,7 @@ function App() {
         <Toast 
             message={lockedToastMessage} 
             onClose={() => setLockedToastMessage(null)} 
+            themeId={currentThemeId}
         />
       )}
 

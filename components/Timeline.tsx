@@ -1,7 +1,6 @@
 
 import React, { useEffect, useRef, useState } from 'react';
 import { DayData, DayState } from '../types';
-import { Clock, Sparkles } from 'lucide-react';
 
 interface TimelineProps {
   days: DayData[];
@@ -106,98 +105,6 @@ const CoupleAvatars = () => (
   </div>
 );
 
-// Countdown Hook
-const useCountdown = (targetDate: string) => {
-  const [timeLeft, setTimeLeft] = useState<{h: number, m: number, s: number} | null>(null);
-
-  useEffect(() => {
-    const target = new Date(targetDate + 'T00:00:00').getTime();
-
-    const interval = setInterval(() => {
-      const now = new Date().getTime();
-      const distance = target - now;
-
-      if (distance < 0) {
-        setTimeLeft(null);
-        clearInterval(interval);
-      } else {
-        setTimeLeft({
-          h: Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)),
-          m: Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60)),
-          s: Math.floor((distance % (1000 * 60)) / 1000)
-        });
-      }
-    }, 1000);
-
-    return () => clearInterval(interval);
-  }, [targetDate]);
-
-  return timeLeft;
-};
-
-const CountdownDisplay = ({ targetDate }: { targetDate: string }) => {
-  const timeLeft = useCountdown(targetDate);
-  if (!timeLeft) return (
-    <span className="inline-flex items-center gap-1 px-3 py-1.5 bg-gradient-to-r from-love-400 to-love-600 text-white rounded-full shadow-lg text-xs font-bold animate-pulse border-2 border-white/50">
-      <Sparkles size={12} fill="currentColor" /> Unlocked!
-    </span>
-  );
-
-  return (
-    <div className="flex flex-col items-center animate-fade-in-up">
-      <div className="relative group">
-        {/* Glow Effect */}
-        <div className="absolute -inset-1 bg-gradient-to-r from-love-300 to-love-500 rounded-2xl blur opacity-30 group-hover:opacity-50 transition duration-1000"></div>
-        
-        {/* Main Card */}
-        <div className="relative flex items-center gap-3 px-5 py-3 bg-love-100/90 backdrop-blur-xl rounded-2xl shadow-[0_8px_30px_rgb(0,0,0,0.12)] border border-love-200/60">
-          
-          {/* Hours */}
-          <div className="flex flex-col items-center">
-            <div className="bg-love-50 rounded-lg p-1 min-w-[32px] flex justify-center border border-love-200">
-               <span className="text-xl font-bold text-love-600 font-mono leading-none">
-                 {timeLeft.h.toString().padStart(2,'0')}
-               </span>
-            </div>
-            <span className="text-[9px] font-bold text-love-500 uppercase tracking-wider mt-1">Hrs</span>
-          </div>
-
-          <div className="text-love-500 font-bold text-lg -mt-3 animate-pulse">:</div>
-
-          {/* Minutes */}
-          <div className="flex flex-col items-center">
-            <div className="bg-love-50 rounded-lg p-1 min-w-[32px] flex justify-center border border-love-200">
-               <span className="text-xl font-bold text-love-600 font-mono leading-none">
-                 {timeLeft.m.toString().padStart(2,'0')}
-               </span>
-            </div>
-            <span className="text-[9px] font-bold text-love-500 uppercase tracking-wider mt-1">Min</span>
-          </div>
-
-          <div className="text-love-500 font-bold text-lg -mt-3 animate-pulse">:</div>
-
-          {/* Seconds */}
-          <div className="flex flex-col items-center">
-            <div className="bg-love-50 rounded-lg p-1 min-w-[32px] flex justify-center border border-love-200">
-               <span className="text-xl font-bold text-love-500 font-mono leading-none tabular-nums">
-                 {timeLeft.s.toString().padStart(2,'0')}
-               </span>
-            </div>
-            <span className="text-[9px] font-bold text-love-500 uppercase tracking-wider mt-1">Sec</span>
-          </div>
-
-        </div>
-        
-        {/* Floating Badge */}
-        <div className="absolute -top-3 left-1/2 -translate-x-1/2 bg-gradient-to-r from-love-500 to-love-600 text-white text-[9px] font-bold px-3 py-1 rounded-full shadow-lg border-2 border-love-100 whitespace-nowrap flex items-center gap-1.5 z-10">
-          <Clock size={10} className="animate-spin-slow" style={{ animationDuration: '4s' }} /> 
-          <span>COMING SOON</span>
-        </div>
-      </div>
-    </div>
-  );
-};
-
 export const Timeline: React.FC<TimelineProps> = ({ days, getDoyState, onDayClick, avatarIndex }) => {
   const dayRefs = useRef<(HTMLDivElement | null)[]>([]);
   const [avatarTop, setAvatarTop] = useState(0);
@@ -207,9 +114,6 @@ export const Timeline: React.FC<TimelineProps> = ({ days, getDoyState, onDayClic
   }, -1);
   
   const progress = Math.max(0, lastUnlockedIndex + 1);
-
-  // Find the FIRST locked day to show the countdown
-  const nextLockedIndex = days.findIndex(day => getDoyState(day) === DayState.LOCKED);
 
   // Calculate the exact Top position for the avatar based on the current index
   useEffect(() => {
@@ -263,7 +167,7 @@ export const Timeline: React.FC<TimelineProps> = ({ days, getDoyState, onDayClic
   const isAvatarLeft = avatarIndex % 2 === 0;
 
   return (
-    <div className="relative py-10 px-4 max-w-md mx-auto min-h-screen">
+    <div className="relative pt-2 pb-10 px-4 max-w-md mx-auto min-h-screen">
       
       {/* Road SVG */}
       <svg className="absolute top-0 left-0 w-full h-full pointer-events-none z-0 overflow-visible" preserveAspectRatio="none">
@@ -319,7 +223,7 @@ export const Timeline: React.FC<TimelineProps> = ({ days, getDoyState, onDayClic
         />
       </svg>
 
-      <div className="relative z-10 flex flex-col space-y-[56px] pt-12 pb-20">
+      <div className="relative z-10 flex flex-col space-y-[56px] pt-4 pb-20">
         
         {/* Floating Avatar Container */}
         <div 
@@ -337,7 +241,6 @@ export const Timeline: React.FC<TimelineProps> = ({ days, getDoyState, onDayClic
         {days.map((day, index) => {
           const state = getDoyState(day);
           const isLeft = index % 2 === 0;
-          const isNextLocked = index === nextLockedIndex;
 
           return (
             <div 
@@ -350,11 +253,10 @@ export const Timeline: React.FC<TimelineProps> = ({ days, getDoyState, onDayClic
                 style={{ width: '55%' }} 
               >
                 
-                {/* Marker & Timer Container */}
+                {/* Marker Container */}
                 <div className="relative flex flex-col items-center z-20">
                     <button
                       onClick={() => onDayClick(day)}
-                      // disabled={state === DayState.LOCKED} // Removed so click event can fire for toast
                       className={`
                         relative flex-shrink-0 flex items-center justify-center w-16 h-16 rounded-full border-4 shadow-xl transition-all duration-500 transform overflow-hidden z-20
                         ${state === DayState.LOCKED ? 'bg-love-50 border-gray-300 opacity-90 cursor-not-allowed' : ''}
@@ -372,13 +274,6 @@ export const Timeline: React.FC<TimelineProps> = ({ days, getDoyState, onDayClic
                       {renderEmojiContent(day.emoji, state)}
 
                     </button>
-                    
-                    {/* Countdown Timer - Placed Below */}
-                    {isNextLocked && (
-                        <div className="absolute top-full mt-4 left-1/2 -translate-x-1/2 z-30 min-w-[180px]">
-                            <CountdownDisplay targetDate={day.fullDate} />
-                        </div>
-                    )}
                 </div>
                 
                 {/* Text Label */}

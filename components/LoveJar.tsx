@@ -60,7 +60,7 @@ export const LoveJar: React.FC = () => {
               onClick={() => setIsOpen(false)}
               className="mt-8 w-full py-3 bg-love-600 text-white rounded-xl font-bold hover:bg-love-700 shadow-md transition-colors"
             >
-              I love you too!
+              You have my whole heart! ❤️
             </button>
             
             <button 

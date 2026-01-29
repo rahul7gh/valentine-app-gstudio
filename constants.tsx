@@ -8,7 +8,7 @@ const getDate = (day: number) => `${CURRENT_YEAR}-02-${day.toString().padStart(2
 
 export const LOCKED_MESSAGES = [
   "Hold your horses, gorgeous! 🐴",
-  "Patience is a virtue (and sexy)! 😉",
+  "Patience is a virtue! 😉",
   "Not yet! Good things take time. ⏳",
   "No peeking at the future! 🙈",
   "Wait for the magic moment! ✨",
