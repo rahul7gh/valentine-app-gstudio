@@ -112,18 +112,18 @@ export const VALENTINE_DAYS: DayData[] = [
     fullDate: getDate(7),
     icon: <Heart className="w-6 h-6" />,
     emoji: "🌹",
-    loadingMessage: "Picking the freshest roses for you...",
+    loadingMessage: "Picking the best rose for you...",
     view1: {
-      gifUrl: "rose.webp",
-      citeText: "A rose speaks of love silently, in a language known only to the heart."
+      gifUrl: "day1.webp", // Bear holding rose
+      citeText: "Just like this rose, my love for you blooms more every single day."
     },
     view2: {
-      title: "Happy Rose Day!",
+      title: "For My Beautiful Rose",
       images: ["https://picsum.photos/400/500?random=11", "https://picsum.photos/400/500?random=12"],
-      text: "Like a rose, you bring beauty and fragrance into my life. These photos remind me of how beautiful our journey has been so far.",
-      challenge: "Find a real flower today and take a selfie with it for me!",
+      text: "You are the most beautiful flower in the garden of my life. Happy Rose Day, my love!",
+      challenge: "Find a flower (or draw one!) and send me a picture.",
       aiPromptTheme: "roses and the beauty of a new blossoming marriage",
-      buttonLabel: "Keep this Rose",
+      buttonLabel: "Accept My Rose",
       closingSalutation: "With fragrant love,"
     }
   },
@@ -134,18 +134,18 @@ export const VALENTINE_DAYS: DayData[] = [
     fullDate: getDate(8),
     icon: <Gift className="w-6 h-6" />,
     emoji: "💍",
-    loadingMessage: "Building up the courage...",
+    loadingMessage: "Getting down on one knee...",
     view1: {
-      gifUrl: "propose.webp",
-      citeText: "Every love story is beautiful, but ours is my favorite."
+      gifUrl: "day2.webp", // Bear proposing
+      citeText: "It's a definite YES from me, to you, forever."
     },
     view2: {
-      title: "Will You Be Mine?",
+      title: "Marry Me (Again?)",
       images: ["https://picsum.photos/400/500?random=21", "https://picsum.photos/400/500?random=22"],
-      text: "Today I promise to walk by your side forever. Looking at these memories makes me certain you're the one.",
-      challenge: "Tell me one thing you want us to do together after we're married.",
+      text: "Every day I wake up and choose you. I can't wait to make it official.",
+      challenge: "Send me a voice note saying 'Yes!'",
       aiPromptTheme: "eternal promises and the joy of choosing each other forever",
-      buttonLabel: "Accept My Heart",
+      buttonLabel: "Say Yes!",
       closingSalutation: "Yours eternally,"
     }
   },
@@ -156,18 +156,18 @@ export const VALENTINE_DAYS: DayData[] = [
     fullDate: getDate(9),
     icon: <Star className="w-6 h-6" />,
     emoji: "🍫",
-    loadingMessage: "Melting the sweetest chocolate...",
+    loadingMessage: "Unwrapping something sweet...",
     view1: {
-      gifUrl: "chocolate.webp",
-      citeText: "All you need is love. But a little chocolate now and then doesn't hurt."
+      gifUrl: "day3.webp", // Bears eating
+      citeText: "Life with you is sweeter than the finest chocolate."
     },
     view2: {
-      title: "Sweetest Thing",
+      title: "Sweet Treats",
       images: ["https://picsum.photos/400/500?random=31", "https://picsum.photos/400/500?random=32"],
-      text: "You are sweeter than any chocolate in this world. Happy Chocolate Day, my love!",
-      challenge: "Treat yourself to your favorite dessert today. You deserve it!",
+      text: "Sharing snacks and sweet moments with you is my favorite thing to do.",
+      challenge: "Eat your favorite treat today and think of me!",
       aiPromptTheme: "the sweetness of love and how life with you is a treat",
-      buttonLabel: "Savor the Sweetness",
+      buttonLabel: "Yum!",
       closingSalutation: "Sweetly yours,"
     }
   },
@@ -178,18 +178,18 @@ export const VALENTINE_DAYS: DayData[] = [
     fullDate: getDate(10),
     icon: <Smile className="w-6 h-6" />,
     emoji: "🧸",
-    loadingMessage: "Fluffing the teddy bear...",
+    loadingMessage: "Sending fluffy vibes...",
     view1: {
-      gifUrl: "teddy.webp",
-      citeText: "A soft hug from a teddy bear can fix everything."
+      gifUrl: "day4.webp", // Happy bears / hugging
+      citeText: "I'm your teddy bear, and you're my comfort zone."
     },
     view2: {
-      title: "Cuddles & Hugs",
+      title: "Soft & Cuddly",
       images: ["https://picsum.photos/400/500?random=41", "https://picsum.photos/400/500?random=42"],
-      text: "Sending you a big fluffy teddy bear hug! I wish I was there to cuddle you right now.",
-      challenge: "Give your favorite pillow a big squeeze and imagine it's me.",
+      text: "I promise to always be soft for you, to be your comfort when the world is hard.",
+      challenge: "Wear your comfiest pajamas tonight.",
       aiPromptTheme: "warm hugs, softness, and the comfort of your presence",
-      buttonLabel: "Cuddle Forever",
+      buttonLabel: "Snuggle Up",
       closingSalutation: "Beary much yours,"
     }
   },
@@ -200,18 +200,18 @@ export const VALENTINE_DAYS: DayData[] = [
     fullDate: getDate(11),
     icon: <Sun className="w-6 h-6" />,
     emoji: "🎀",
-    loadingMessage: "Sealing our promise...",
+    loadingMessage: "Making a pinky promise...",
     view1: {
-      gifUrl: "promise.webp",
-      citeText: "Promises are the uniquely human way of ordering the future."
+      gifUrl: "day5.webp", // Holding hands
+      citeText: "Hand in hand, I promise to walk this life with you."
     },
     view2: {
-      title: "My Vow to You",
+      title: "My Vow",
       images: ["https://picsum.photos/400/500?random=51", "https://picsum.photos/400/500?random=52"],
-      text: "I promise to be your biggest cheerleader, your safe space, and your partner in crime forever.",
-      challenge: "Make a pinky promise with me to never go to bed angry.",
+      text: "I promise to hold your hand through the good times and the bad. You never have to walk alone.",
+      challenge: "Send me a photo of your hand reaching out to mine.",
       aiPromptTheme: "commitment, loyalty, and the sacred vows we will soon take",
-      buttonLabel: "Seal Our Vow",
+      buttonLabel: "I Promise",
       closingSalutation: "Forever committed,"
     }
   },
@@ -222,18 +222,18 @@ export const VALENTINE_DAYS: DayData[] = [
     fullDate: getDate(12),
     icon: <Moon className="w-6 h-6" />,
     emoji: CustomHugEmoji,
-    loadingMessage: "Opening arms for a warm hug...",
+    loadingMessage: "Squeezing tight...",
     view1: {
-      gifUrl: "hug.webp",
-      citeText: "One hug from you clears all my worries."
+      gifUrl: "day6.webp", // Tight hug
+      citeText: "There is no place I'd rather be than in your arms."
     },
     view2: {
-      title: "Warm Embrace",
+      title: "The Perfect Fit",
       images: ["https://picsum.photos/400/500?random=61", "https://picsum.photos/400/500?random=62"],
-      text: "Wrapping you in a warm hug today and always. You are my safe harbor.",
-      challenge: "Hug me for at least 20 seconds today. No letting go early!",
+      text: "Your hugs heal everything. I'm sending you the biggest, tightest squeeze right now!",
+      challenge: "Squeeze yourself tight for 5 seconds and feel my love.",
       aiPromptTheme: "the security and warmth of a lifelong embrace",
-      buttonLabel: "Hold Me Close",
+      buttonLabel: "Squeeze Me",
       closingSalutation: "Holding you tight,"
     }
   },
@@ -244,18 +244,18 @@ export const VALENTINE_DAYS: DayData[] = [
     fullDate: getDate(13),
     icon: <Camera className="w-6 h-6" />,
     emoji: "💋",
-    loadingMessage: "Sending a thousand kisses...",
+    loadingMessage: "Puckering up...",
     view1: {
-      gifUrl: "kiss.webp",
-      citeText: "A kiss is a secret told to the mouth instead of the ear."
+      gifUrl: "day7.webp", // Kissing
+      citeText: "Muah! A kiss to start your day and end your night."
     },
     view2: {
-      title: "Sealed with a Kiss",
+      title: "Kisses for You",
       images: ["https://picsum.photos/400/500?random=71", "https://picsum.photos/400/500?random=72"],
-      text: "Sending you a million kisses to brighten your day. Mwah!",
-      challenge: "Send me a voice note of a 'mwah' sound.",
+      text: "One kiss is all it takes to make my heart race. I love you!",
+      challenge: "Send me a kiss emoji 😘",
       aiPromptTheme: "passion, affection, and the thrill of your kiss",
-      buttonLabel: "Capture the Kiss",
+      buttonLabel: "Mwah!",
       closingSalutation: "With endless kisses,"
     }
   },
@@ -266,10 +266,10 @@ export const VALENTINE_DAYS: DayData[] = [
     fullDate: getDate(14),
     icon: <Music className="w-6 h-6" />,
     emoji: "❤️",
-    loadingMessage: "Preparing the grand finale...",
+    loadingMessage: "Here is my heart...",
     view1: {
-      gifUrl: "valentine.webp",
-      citeText: "Loved you yesterday, love you still, always have, always will."
+      gifUrl: "day8.webp", // Heart / Sitting together
+      citeText: "You are my Valentine, today and forever."
     },
     view2: {
       title: "My Forever Valentine",
