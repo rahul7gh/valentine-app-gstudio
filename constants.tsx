@@ -1,5 +1,4 @@
 
-import React from 'react';
 import { DayData, Theme } from './types';
 import { Heart, Gift, Camera, Music, Star, Sun, Moon, Smile } from 'lucide-react';
 

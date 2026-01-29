@@ -1,6 +1,6 @@
 
 import React, { useState, useRef, useEffect } from 'react';
-import { Music, Volume2, VolumeX, Heart, SkipForward, SkipBack, Disc, ChevronDown, ListMusic } from 'lucide-react';
+import { Music, Volume2, VolumeX, SkipForward, SkipBack, Disc, ChevronDown, ListMusic } from 'lucide-react';
 
 const PLAYLIST = [
   { title: "Sweet Love", artist: "Bensound", url: "https://www.bensound.com/bensound-music/bensound-love.mp3" },
@@ -39,7 +39,7 @@ export const MusicPlayer: React.FC = () => {
       if (isPlaying) {
         audioRef.current.pause();
       } else {
-        audioRef.current.play().catch(e => console.log("Audio play blocked by browser"));
+        audioRef.current.play().catch(() => console.log("Audio play blocked by browser"));
       }
       setIsPlaying(!isPlaying);
     }

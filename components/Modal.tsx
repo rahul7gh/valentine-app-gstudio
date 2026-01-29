@@ -2,7 +2,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { DayData, DayState } from '../types';
 import { Loader } from './Loader';
-import { GENERIC_MESSAGES, FIRST_TIME_MESSAGES } from '../constants';
 import { X, Heart, Mail, Sparkles, ChevronLeft, ChevronRight } from 'lucide-react';
 import { Confetti } from './Confetti';
 import { GeminiPoet } from './GeminiPoet';

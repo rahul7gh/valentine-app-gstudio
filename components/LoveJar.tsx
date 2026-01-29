@@ -1,6 +1,6 @@
 
 import React, { useState } from 'react';
-import { Heart, X } from 'lucide-react';
+import { Heart } from 'lucide-react';
 import { REASONS_I_LOVE_YOU } from '../constants';
 
 export const LoveJar: React.FC = () => {

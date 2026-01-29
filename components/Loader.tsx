@@ -1,6 +1,5 @@
 
-import React, { useState, useEffect } from 'react';
-import { Loader2 } from 'lucide-react';
+import React from 'react';
 
 interface LoaderProps {
   message: string;

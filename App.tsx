@@ -1,5 +1,5 @@
 
-import React, { useState, useCallback, useMemo, useEffect } from 'react';
+import { useState, useCallback, useMemo, useEffect, ReactNode } from 'react';
 import { Timeline } from './components/Timeline';
 import { Modal } from './components/Modal';
 import { AdminPanel } from './components/AdminPanel';
@@ -45,7 +45,7 @@ function App() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isAdminOpen, setIsAdminOpen] = useState(false);
   const [isThemePickerOpen, setIsThemePickerOpen] = useState(false);
-  const [showerEmoji, setShowerEmoji] = useState<string | null>(null);
+  const [showerEmoji, setShowerEmoji] = useState<string | ReactNode | null>(null);
   const [lockedToastMessage, setLockedToastMessage] = useState<string | null>(null);
 
   // Initialize avatar at the highest opened day (or the first day if none)
@@ -110,7 +110,7 @@ function App() {
     }
   };
 
-  const handleModalClose = (emoji: string) => {
+  const handleModalClose = (emoji: string | ReactNode) => {
     setIsModalOpen(false);
     if (selectedDay) {
       const newOpened = { ...openedDays, [selectedDay.id]: true };
