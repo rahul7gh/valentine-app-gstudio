@@ -37,6 +37,7 @@
               'fade-in-up': 'fadeInUp 0.5s ease-out forwards',
               'fade-out': 'fadeOut 0.3s ease-out forwards',
               'wiggle': 'wiggle 1s ease-in-out infinite',
+              'active-heart-pulse': 'heartbeat 1.5s ease-in-out infinite',
             },
             keyframes: {
               float: {
@@ -54,6 +55,13 @@
               wiggle: {
                 '0%, 100%': { transform: 'rotate(-3deg)' },
                 '50%': { transform: 'rotate(3deg)' },
+              },
+              heartbeat: {
+                '0%': { transform: 'scale(1)' },
+                '14%': { transform: 'scale(1.15)' },
+                '28%': { transform: 'scale(1)' },
+                '42%': { transform: 'scale(1.15)' },
+                '70%': { transform: 'scale(1)' },
               }
             }
           }
