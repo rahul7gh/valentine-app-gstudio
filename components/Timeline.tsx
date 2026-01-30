@@ -1,12 +1,10 @@
 
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef, useState, useLayoutEffect } from 'react';
 import { DayData, DayState } from '../types';
 
-interface TimelineProps {
-  days: DayData[];
-  getDoyState: (day: DayData) => DayState;
-  onDayClick: (day: DayData) => void;
-  avatarIndex: number;
+interface Point {
+  x: number;
+  y: number;
 }
 
 // Ghibli Style Boy
@@ -105,36 +103,114 @@ const CoupleAvatars = () => (
   </div>
 );
 
+interface TimelineProps {
+  days: DayData[];
+  getDoyState: (day: DayData) => DayState;
+  onDayClick: (day: DayData) => void;
+  avatarIndex: number;
+}
+
 export const Timeline: React.FC<TimelineProps> = ({ days, getDoyState, onDayClick, avatarIndex }) => {
-  const dayRefs = useRef<(HTMLDivElement | null)[]>([]);
-  const [avatarTop, setAvatarTop] = useState(0);
+  const pathRef = useRef<SVGPathElement>(null);
+  const containerRef = useRef<HTMLDivElement>(null);
+
+  const [markerPositions, setMarkerPositions] = useState<Point[]>([]);
+  const [markerDistances, setMarkerDistances] = useState<number[]>([]);
+  const [avatarDistance, setAvatarDistance] = useState(0);
+  const [containerHeight, setContainerHeight] = useState(2500); // Increased default height
+  const [pathD, setPathD] = useState("");
+  const [centerX, setCenterX] = useState(0);
 
   const lastUnlockedIndex = days.reduce((acc, day, index) => {
     return getDoyState(day) !== DayState.LOCKED ? index : acc;
   }, -1);
   
   const progress = Math.max(0, lastUnlockedIndex + 1);
-
-  // Calculate the exact Top position for the avatar based on the current index
+  
+  // Dynamically calculate the path based on container width
   useEffect(() => {
-    const activeRef = dayRefs.current[avatarIndex];
-    if (activeRef) {
-      setAvatarTop(activeRef.offsetTop + 10);
+    const updatePath = () => {
+      if (!containerRef.current) return;
+      
+      const w = containerRef.current.clientWidth;
+      const width = w > 0 ? w : 350; 
+      
+      const c = width / 2;
+      setCenterX(c);
+      const r = width * 0.85; // Slightly wider curve
+      const l = width * 0.15; // Slightly wider curve
+
+      // Generate a longer, wavier road
+      const START_Y = 50;
+      const SEGMENT_HEIGHT = 220; // Increased distance between curves significantly
+      
+      let d = `M ${c} ${START_Y}`;
+      let currentY = START_Y;
+      
+      // Generate enough segments for all days + buffer
+      const segments = days.length + 1;
+      
+      for (let i = 0; i < segments; i++) {
+        const isRight = i % 2 === 0;
+        const cpX = isRight ? r : l; // Control Point X
+        const nextY = currentY + SEGMENT_HEIGHT;
+        const cpY = currentY + (SEGMENT_HEIGHT / 2);
+        
+        d += ` Q ${cpX} ${cpY}, ${c} ${nextY}`;
+        currentY = nextY;
+      }
+      
+      setPathD(d);
+    };
+
+    updatePath();
+    window.addEventListener('resize', updatePath);
+    return () => window.removeEventListener('resize', updatePath);
+  }, [days.length]);
+
+  useLayoutEffect(() => {
+    if (pathRef.current && pathD) {
+      const path = pathRef.current;
+      try {
+        const pathLength = path.getTotalLength();
+        
+        // Calculate distances first
+        const dists = days.map((_, i) => (pathLength / days.length) * (i + 0.5));
+        setMarkerDistances(dists);
+
+        // Get coordinates from distances
+        const newPositions = dists.map(dist => {
+          const { x, y } = path.getPointAtLength(dist);
+          return { x, y };
+        });
+        
+        setMarkerPositions(newPositions);
+        setContainerHeight(pathLength + 150);
+      } catch (error) {
+        console.error("Error calculating path points:", error);
+      }
     }
-  }, [avatarIndex]);
+  }, [days, pathD]);
 
-  // Auto-scroll to the latest unlocked day on load
+  // Update avatar distance when index changes
   useEffect(() => {
-    if (lastUnlockedIndex >= 0 && dayRefs.current[lastUnlockedIndex]) {
+    if (markerDistances.length > 0 && markerDistances[avatarIndex] !== undefined) {
+      setAvatarDistance(markerDistances[avatarIndex]);
+    }
+  }, [avatarIndex, markerDistances]);
+  
+  useEffect(() => {
+    if (containerRef.current && markerPositions.length > 0 && lastUnlockedIndex >= 0) {
       const timer = setTimeout(() => {
-        dayRefs.current[lastUnlockedIndex]?.scrollIntoView({ 
-          behavior: 'smooth', 
-          block: 'center' 
+        const targetY = markerPositions[lastUnlockedIndex].y;
+        containerRef.current?.scrollTo({
+          top: targetY - (containerRef.current.clientHeight / 2),
+          behavior: 'smooth',
         });
       }, 500);
       return () => clearTimeout(timer);
     }
-  }, [lastUnlockedIndex]);
+  }, [lastUnlockedIndex, markerPositions]);
 
   const renderEmojiContent = (emoji: string | React.ReactNode, state: DayState) => {
     const isString = typeof emoji === 'string';
@@ -164,131 +240,101 @@ export const Timeline: React.FC<TimelineProps> = ({ days, getDoyState, onDayClic
     }
   };
 
-  const isAvatarLeft = avatarIndex % 2 === 0;
-
   return (
-    <div className="relative pt-2 pb-10 px-4 max-w-md mx-auto min-h-screen">
-      
-      {/* Road SVG */}
-      <svg className="absolute top-0 left-0 w-full h-full pointer-events-none z-0 overflow-visible" preserveAspectRatio="none">
-        <defs>
-          <path id="roadPath"
-            d={`M 50% 20 
-               Q 20% 80, 50% 140 
-               T 50% 260 
-               T 50% 380 
-               T 50% 500 
-               T 50% 620 
-               T 50% 740 
-               T 50% 860 
-               T 50% 980`}
-          />
-        </defs>
+    <div ref={containerRef} className="relative h-full overflow-y-auto px-4">
+      <div className="relative mx-auto max-w-md" style={{ height: `${containerHeight}px` }}>
+        {pathD && (
+          <svg className="absolute top-0 left-0 w-full h-full pointer-events-none z-0 overflow-visible">
+            <defs>
+              <path
+                id="roadPath"
+                ref={pathRef}
+                d={pathD}
+              />
+            </defs>
 
-        <use href="#roadPath"
-          fill="none"
-          stroke="var(--love-300)" 
-          strokeWidth="60"
-          strokeLinecap="round"
-          style={{ vectorEffect: 'non-scaling-stroke', opacity: 0.3 }} 
-        />
+            <use href="#roadPath" fill="none" stroke="var(--love-300)" strokeWidth="60" strokeLinecap="round" style={{ opacity: 0.3 }} />
+            <use href="#roadPath" fill="none" stroke="var(--love-200)" strokeWidth="50" strokeLinecap="round" />
+            
+            <path
+                d={pathD}
+                fill="none" 
+                stroke="var(--love-600)" 
+                strokeWidth="50" 
+                strokeLinecap="round" 
+                pathLength={days.length} 
+                strokeDasharray={`${progress} ${days.length}`} 
+                strokeDashoffset="0"
+                className="transition-all duration-1000 ease-in-out opacity-90"
+            />
+            
+            <use href="#roadPath" fill="none" stroke="var(--love-400)" strokeWidth="2" strokeDasharray="10 10" strokeLinecap="round" />
+          </svg>
+        )}
 
-        <use href="#roadPath"
-          fill="none"
-          stroke="var(--love-200)"
-          strokeWidth="50"
-          strokeLinecap="round"
-          style={{ vectorEffect: 'non-scaling-stroke' }}
-        />
+        {/* Avatar using Offset Path for smooth curve following */}
+        {markerDistances.length > 0 && pathD && (
+          <div
+            className="absolute z-40 pointer-events-none"
+            style={{
+              // @ts-ignore - Offset path properties are standard but TS might complain depending on lib version
+              offsetPath: `path('${pathD}')`,
+              offsetDistance: `${avatarDistance}px`,
+              offsetRotate: '0deg', // Keep upright
+              transition: 'offset-distance 2s cubic-bezier(0.45, 0, 0.55, 1)', // Smooth easing
+              // Centering on the path point + vertical offset to show marker
+              // Increased Y translation to move avatar below marker and text
+              transform: 'translate(-50%, 120%)', 
+              top: 0,
+              left: 0,
+            }}
+          >
+            <CoupleAvatars />
+          </div>
+        )}
 
-        <use href="#roadPath"
-          fill="none"
-          stroke="var(--love-600)"
-          strokeWidth="50"
-          strokeLinecap="round"
-          pathLength="8"
-          strokeDasharray={`${progress} 8`}
-          strokeDashoffset="0"
-          className="transition-all duration-1000 ease-in-out opacity-90"
-          style={{ vectorEffect: 'non-scaling-stroke' }}
-        />
-
-        <use href="#roadPath"
-          fill="none"
-          stroke="var(--love-400)"
-          strokeWidth="2"
-          strokeDasharray="10 10"
-          strokeLinecap="round"
-          style={{ vectorEffect: 'non-scaling-stroke' }}
-        />
-      </svg>
-
-      <div className="relative z-10 flex flex-col space-y-[56px] pt-4 pb-20">
-        
-        {/* Floating Avatar Container */}
-        <div 
-          className="absolute z-40 transition-all duration-[2000ms] ease-in-out"
-          style={{ 
-            top: avatarTop, 
-            left: isAvatarLeft ? '62%' : 'auto', 
-            right: isAvatarLeft ? 'auto' : '62%',
-            transform: 'translateY(-50%)'
-          }}
-        >
-          <CoupleAvatars />
-        </div>
-
-        {days.map((day, index) => {
+        {markerPositions.map((pos, index) => {
+          const day = days[index];
           const state = getDoyState(day);
-          const isLeft = index % 2 === 0;
+          const isRightSide = pos.x > centerX;
 
           return (
-            <div 
-              key={day.id} 
-              ref={el => { dayRefs.current[index] = el; }}
-              className={`relative flex items-center w-full ${isLeft ? 'justify-start pl-4' : 'justify-end pr-4'}`}
+            <div
+              key={day.id}
+              className="absolute z-20 group"
+              style={{
+                top: `${pos.y}px`,
+                left: `${pos.x}px`,
+                transform: 'translate(-50%, -50%)',
+              }}
             >
-              <div 
-                className={`relative flex items-center ${isLeft ? 'flex-row' : 'flex-row-reverse'} gap-4`}
-                style={{ width: '55%' }} 
-              >
+              <div className="relative flex items-center">
+                <button
+                  onClick={() => onDayClick(day)}
+                  className={`relative flex-shrink-0 flex items-center justify-center w-16 h-16 rounded-full border-4 shadow-xl transition-all duration-500 transform overflow-hidden z-20
+                    ${state === DayState.LOCKED ? 'bg-love-50 border-gray-300 opacity-90 cursor-not-allowed' : ''}
+                    ${state === DayState.UNLOCKED ? 'bg-love-50 border-love-500 scale-110 hover:scale-115 shadow-[0_0_15px_var(--love-300)]' : ''}
+                    ${state === DayState.OPENED ? 'bg-love-500 border-love-600 scale-100 shadow-inner' : ''}
+                  `}
+                >
+                  {state === DayState.UNLOCKED && (
+                    <>
+                      <div className="absolute inset-0 rounded-full bg-love-100/30"></div>
+                      <div className="absolute -inset-1 rounded-full border-2 border-love-400 opacity-40 animate-ping"></div>
+                    </>
+                  )}
+                  {renderEmojiContent(day.emoji, state)}
+                </button>
                 
-                {/* Marker Container */}
-                <div className="relative flex flex-col items-center z-20">
-                    <button
-                      onClick={() => onDayClick(day)}
-                      className={`
-                        relative flex-shrink-0 flex items-center justify-center w-16 h-16 rounded-full border-4 shadow-xl transition-all duration-500 transform overflow-hidden z-20
-                        ${state === DayState.LOCKED ? 'bg-love-50 border-gray-300 opacity-90 cursor-not-allowed' : ''}
-                        ${state === DayState.UNLOCKED ? 'bg-love-50 border-love-500 scale-110 hover:scale-115 shadow-[0_0_15px_var(--love-300)]' : ''}
-                        ${state === DayState.OPENED ? 'bg-love-500 border-love-600 scale-100 shadow-inner' : ''}
-                      `}
-                    >
-                      {state === DayState.UNLOCKED && (
-                        <>
-                           <div className="absolute inset-0 rounded-full bg-love-100/30"></div>
-                           <div className="absolute -inset-1 rounded-full border-2 border-love-400 opacity-40 animate-ping"></div>
-                        </>
-                      )}
-                      
-                      {renderEmojiContent(day.emoji, state)}
-
-                    </button>
-                </div>
-                
-                {/* Text Label */}
-                <div className={`relative group z-10`}>
-                  <div className={`
-                     flex flex-col p-2 min-w-[100px]
-                     transition-all duration-500
-                     ${state === DayState.LOCKED ? 'opacity-40 grayscale blur-[0.5px]' : 'opacity-100 transform hover:scale-105'}
-                     ${isLeft ? 'items-start text-left' : 'items-end text-right'}
-                  `}>
-                    <span className="font-bold text-love-600 text-xs uppercase tracking-wider mb-0.5">{day.date}</span>
-                    <span className="font-handwriting text-2xl text-love-800 font-bold leading-none drop-shadow-[0_2px_2px_rgba(255,255,255,0.8)]">
-                      {day.dayName}
-                    </span>
-                  </div>
+                <div className={`absolute top-1/2 -translate-y-1/2 w-[120px] 
+                    ${isRightSide ? 'right-full mr-14 text-right' : 'left-full ml-14 text-left'}
+                    transition-all duration-500
+                    ${state === DayState.LOCKED ? 'opacity-40 grayscale blur-[0.5px]' : 'opacity-100 transform group-hover:scale-105'}
+                `}>
+                  <span className="font-bold text-love-600 text-xs uppercase tracking-wider mb-0.5 block">{day.date}</span>
+                  <h3 className="font-handwriting text-2xl text-love-800 font-bold leading-none drop-shadow-[0_2px_2px_rgba(255,255,255,0.8)]">
+                    {day.dayName}
+                  </h3>
                 </div>
               </div>
             </div>

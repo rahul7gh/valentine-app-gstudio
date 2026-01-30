@@ -2,7 +2,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { DayData, DayState } from '../types';
 import { Loader } from './Loader';
-import { X, Heart, Mail, Sparkles, ChevronLeft, ChevronRight } from 'lucide-react';
+import { X, Heart, Mail, Sparkles, ChevronLeft, ChevronRight, Upload, Send, Paperclip } from 'lucide-react';
 import { Confetti } from './Confetti';
 import { GeminiPoet } from './GeminiPoet';
 
@@ -50,6 +50,10 @@ export const Modal: React.FC<ModalProps> = ({ day, isOpen, onClose, dayState }) 
   const [showConfetti, setShowConfetti] = useState(false);
   const [carouselIndex, setCarouselIndex] = useState(0);
   const [revealSticker, setRevealSticker] = useState(false);
+  
+  // Mission File State
+  const [missionFile, setMissionFile] = useState<File | null>(null);
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   // Initialize and handle loading phase
   useEffect(() => {
@@ -61,16 +65,16 @@ export const Modal: React.FC<ModalProps> = ({ day, isOpen, onClose, dayState }) 
       setShowConfetti(false);
       setCarouselIndex(0);
       setRevealSticker(false);
+      setMissionFile(null);
       
       // Use the day-specific creative message for the initial load
-      // If previously opened, we could use a generic one, but the day-specific one feels more "themed"
       setLoadingMessage(day.loadingMessage);
 
       // Simulate unwrapping delay
       const timer = setTimeout(() => {
         setLoading(false);
         if (dayState === DayState.UNLOCKED) setShowConfetti(true);
-      }, 2500); // Slightly longer for the nice loader animation
+      }, 2500);
 
       return () => {
         clearTimeout(timer);
@@ -82,7 +86,6 @@ export const Modal: React.FC<ModalProps> = ({ day, isOpen, onClose, dayState }) 
   // Handle the "Sticker Reveal" separately once loading is done
   useEffect(() => {
     if (!loading && isOpen && step === 0) {
-      // Small tick delay to ensure the DOM has rendered the Slide 1 container
       const timer = setTimeout(() => {
         setRevealSticker(true);
       }, 50);
@@ -93,6 +96,24 @@ export const Modal: React.FC<ModalProps> = ({ day, isOpen, onClose, dayState }) 
   const handleClose = () => {
     setIsClosing(true);
     setTimeout(() => onClose(day.emoji), 300);
+  };
+  
+  const handleFileSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files?.[0]) {
+      setMissionFile(e.target.files[0]);
+    }
+  };
+
+  const handleSendMission = () => {
+    if (!missionFile) return;
+    
+    const subject = encodeURIComponent(`Mission Update: ${day.dayName} 💖`);
+    const body = encodeURIComponent(`Hi Love,\n\nI completed today's mission: "${day.view2.challenge}"\n\nI'm attaching the proof to this email!\n\nLove,\nYour Wifey`);
+    
+    // User feedback
+    alert("Opening your email app... Please attach the file you selected to send it to me! 💌");
+    
+    window.location.href = `mailto:rahulpohare41@gmail.com?subject=${subject}&body=${body}`;
   };
 
   if (!isOpen) return null;
@@ -115,7 +136,8 @@ export const Modal: React.FC<ModalProps> = ({ day, isOpen, onClose, dayState }) 
     <div className={`fixed inset-0 z-50 flex items-center justify-center p-4 ${isClosing ? 'animate-fade-out' : 'animate-fade-in-up'}`}>
       <div className="absolute inset-0 bg-love-900/40 backdrop-blur-sm" onClick={handleClose}></div>
 
-      <div className="custom-modal-card relative w-full max-w-sm bg-love-50 rounded-3xl shadow-2xl overflow-hidden border-2 border-love-100 flex flex-col max-h-[90vh]">
+      {/* Changed to fixed height (h-[80vh]) to ensure scrolling always works regardless of content size */}
+      <div className="custom-modal-card relative w-full max-w-sm bg-love-50 rounded-3xl shadow-2xl overflow-hidden border-2 border-love-100 flex flex-col h-[80vh]">
         {showConfetti && <Confetti primaryColor="var(--love-500)" count={100} />}
 
         {/* Modal Header */}
@@ -128,14 +150,13 @@ export const Modal: React.FC<ModalProps> = ({ day, isOpen, onClose, dayState }) 
              <button onClick={handleClose} className="absolute top-3 right-3 p-1 rounded-full bg-love-200/20 text-white hover:bg-love-200/40"><X className="w-5 h-5" /></button>
         </div>
 
-        <div className="flex-1 overflow-hidden relative"> 
+        <div className="flex-1 overflow-hidden relative min-h-0"> 
           <div className="flex h-full transition-transform duration-700 ease-[cubic-bezier(0.25,1,0.5,1)]" style={{ transform: `translateX(-${step * 100}%)` }}>
               
               {/* SLIDE 1: GIF/Video & Reveal */}
-              <div className="w-full h-full flex-shrink-0 overflow-y-auto pt-10 px-6">
-                   <div className="flex flex-col items-center text-center">
-                       {/* INCREASED HEIGHT FOR HIGH RES ASSETS */}
-                       <div className={`w-full h-80 rounded-2xl flex items-center justify-center mb-4 relative transition-all duration-1000 ease-out ${revealSticker ? 'opacity-100 scale-100 translate-y-0' : 'opacity-0 scale-90 translate-y-8'}`}>
+              <div className="w-full h-full flex-shrink-0 overflow-y-auto pt-10 px-6 pb-12 overscroll-contain">
+                   <div className="flex flex-col items-center text-center pb-8">
+                       <div className={`w-full h-64 sm:h-80 rounded-2xl flex items-center justify-center mb-4 relative transition-all duration-1000 ease-out ${revealSticker ? 'opacity-100 scale-100 translate-y-0' : 'opacity-0 scale-90 translate-y-8'}`}>
                           {isVideo ? (
                             <AutoPlayVideo src={day.view1.gifUrl} />
                           ) : (
@@ -163,8 +184,8 @@ export const Modal: React.FC<ModalProps> = ({ day, isOpen, onClose, dayState }) 
               </div>
 
               {/* SLIDE 2: Content & AI Poem */}
-              <div className="w-full h-full flex-shrink-0 overflow-y-auto bg-love-50 relative p-6">
-                 <div className="flex flex-col gap-6">
+              <div className="w-full h-full flex-shrink-0 overflow-y-auto bg-love-50 relative p-6 pb-20 overscroll-contain">
+                 <div className="flex flex-col gap-6 pb-8">
                     <div className="flex justify-between items-start">
                         <h2 className="font-handwriting text-3xl text-love-800">My Dearest,</h2>
                         <div className="w-12 h-12 border-2 border-love-200 rounded-full flex items-center justify-center opacity-40 rotate-12">
@@ -203,10 +224,62 @@ export const Modal: React.FC<ModalProps> = ({ day, isOpen, onClose, dayState }) 
                     <p className="font-serif text-lg leading-relaxed text-love-900/90 italic">{day.view2.text}</p>
 
                     {day.view2.challenge && (
-                        <div className="bg-love-600 p-4 rounded-2xl text-white shadow-md relative overflow-hidden group">
-                            <Sparkles className="absolute -top-1 -right-1 opacity-20 group-hover:rotate-45 transition-transform" />
-                            <h4 className="font-bold text-xs uppercase tracking-widest mb-1 opacity-80">Today's Mission</h4>
-                            <p className="text-sm font-medium">{day.view2.challenge}</p>
+                        <div className="bg-white/60 backdrop-blur-sm border-2 border-love-200 p-5 rounded-2xl shadow-sm relative overflow-hidden transition-all hover:shadow-md">
+                            <div className="absolute top-0 right-0 p-2 opacity-10">
+                                <Sparkles className="text-love-600 w-12 h-12" />
+                            </div>
+                            
+                            <h4 className="font-bold text-xs text-love-600 uppercase tracking-widest mb-2 flex items-center gap-2">
+                                <Sparkles className="w-3 h-3" /> Today's Mission
+                            </h4>
+                            <p className="text-love-900 font-medium mb-4 leading-relaxed">
+                                {day.view2.challenge}
+                            </p>
+
+                            <div className="bg-love-50 rounded-xl border border-love-200 p-3 flex flex-col gap-3">
+                                <input 
+                                    type="file" 
+                                    ref={fileInputRef}
+                                    onChange={handleFileSelect}
+                                    className="hidden"
+                                    accept="image/*,audio/*,video/*"
+                                />
+                                
+                                {!missionFile ? (
+                                    <button 
+                                        onClick={() => fileInputRef.current?.click()}
+                                        className="w-full py-2 border-2 border-dashed border-love-300 rounded-lg text-love-500 font-bold text-sm hover:bg-love-100 transition-colors flex items-center justify-center gap-2"
+                                    >
+                                        <Upload className="w-4 h-4" /> Upload Proof
+                                    </button>
+                                ) : (
+                                    <div className="flex items-center justify-between bg-love-100 px-3 py-2 rounded-lg">
+                                        <div className="flex items-center gap-2 overflow-hidden">
+                                            <Paperclip className="w-4 h-4 text-love-600 flex-shrink-0" />
+                                            <span className="text-xs text-love-800 truncate font-medium max-w-[150px]">{missionFile.name}</span>
+                                        </div>
+                                        <button onClick={() => setMissionFile(null)} className="text-love-400 hover:text-love-600"><X className="w-4 h-4" /></button>
+                                    </div>
+                                )}
+
+                                <button 
+                                    onClick={handleSendMission}
+                                    disabled={!missionFile}
+                                    className={`
+                                        w-full py-2 rounded-lg font-bold text-sm flex items-center justify-center gap-2 transition-all shadow-sm
+                                        ${missionFile 
+                                            ? 'bg-love-500 text-white hover:bg-love-600 hover:shadow-md active:scale-95' 
+                                            : 'bg-gray-200 text-gray-400 cursor-not-allowed'}
+                                    `}
+                                >
+                                    <Send className="w-4 h-4" /> Submit Mission
+                                </button>
+                            </div>
+                            {missionFile && (
+                                <p className="text-[10px] text-center text-love-400 mt-2 italic">
+                                    * Click submit to open email app. Don't forget to attach the file!
+                                </p>
+                            )}
                         </div>
                     )}
 

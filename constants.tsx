@@ -136,7 +136,7 @@ export const VALENTINE_DAYS: DayData[] = [
     loadingMessage: "Getting down on one knee...",
     view1: {
       gifUrl: "day2.webp", // Bear proposing
-      citeText: "It's a definite YES from me, to you, forever."
+      citeText: "No grand words… just me, choosing you, every day."
     },
     view2: {
       title: "Marry Me (Again?)",
@@ -158,7 +158,7 @@ export const VALENTINE_DAYS: DayData[] = [
     loadingMessage: "Unwrapping something sweet...",
     view1: {
       gifUrl: "day3.webp", // Bears eating
-      citeText: "Life with you is sweeter than the finest chocolate."
+      citeText: "Sweet like this chocolate, warm like the way you make me feel."
     },
     view2: {
       title: "Sweet Treats",
@@ -180,7 +180,7 @@ export const VALENTINE_DAYS: DayData[] = [
     loadingMessage: "Sending fluffy vibes...",
     view1: {
       gifUrl: "day4.webp", // Happy bears / hugging
-      citeText: "I'm your teddy bear, and you're my comfort zone."
+      citeText: "This one’s for you to hold—until I can!"
     },
     view2: {
       title: "Soft & Cuddly",
@@ -224,7 +224,7 @@ export const VALENTINE_DAYS: DayData[] = [
     loadingMessage: "Squeezing tight...",
     view1: {
       gifUrl: "day6.webp", // Tight hug
-      citeText: "There is no place I'd rather be than in your arms."
+      citeText: "This hug is my favorite place—right where you are."
     },
     view2: {
       title: "The Perfect Fit",
@@ -246,7 +246,7 @@ export const VALENTINE_DAYS: DayData[] = [
     loadingMessage: "Puckering up...",
     view1: {
       gifUrl: "day7.webp", // Kissing
-      citeText: "Muah! A kiss to start your day and end your night."
+      citeText: "A small kiss, carrying all the love I don’t always say"
     },
     view2: {
       title: "Kisses for You",
@@ -268,7 +268,7 @@ export const VALENTINE_DAYS: DayData[] = [
     loadingMessage: "Here is my heart...",
     view1: {
       gifUrl: "day8.webp", // Heart / Sitting together
-      citeText: "You are my Valentine, today and forever."
+      citeText: "Loving you, just as you are, is my greatest joy"
     },
     view2: {
       title: "My Forever Valentine",
@@ -298,6 +298,23 @@ export const THEMES: Theme[] = [
       700: '#be123c',
       800: '#9f1239',
       900: '#881337',
+    }
+  },
+  {
+    id: 'endless-universe',
+    name: 'Endless Universe',
+    isDark: true,
+    colors: {
+      50: '#000000',      // Infinite Void
+      100: '#030712',     // Deepest Space
+      200: '#111827',     // Dark Matter
+      300: '#1e293b',     // Outer Rim
+      400: '#334155',     // Nebula Dust
+      500: '#6366f1',     // Indigo Star (Primary Action)
+      600: '#818cf8',     // Blue Giant
+      700: '#a5b4fc',     // Starlight
+      800: '#c7d2fe',     // Aurora
+      900: '#ffffff',     // Pure Light
     }
   },
   {

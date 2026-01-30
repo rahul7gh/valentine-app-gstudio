@@ -1,4 +1,3 @@
-
 import { useState, useCallback, useMemo, useEffect, ReactNode } from 'react';
 import { Timeline } from './components/Timeline';
 import { Modal } from './components/Modal';
@@ -47,12 +46,33 @@ function App() {
   const [isThemePickerOpen, setIsThemePickerOpen] = useState(false);
   const [showerEmoji, setShowerEmoji] = useState<string | ReactNode | null>(null);
   const [lockedToastMessage, setLockedToastMessage] = useState<string | null>(null);
+  
+  const effectiveDays = useMemo(() => {
+    return VALENTINE_DAYS.map(day => ({
+      ...day,
+      fullDate: dateOverrides[day.id] || day.fullDate,
+      date: dateOverrides[day.id] 
+        ? new Date(dateOverrides[day.id] + 'T00:00:00').toLocaleDateString('en-US', { month: 'short', day: 'numeric' })
+        : day.date
+    }));
+  }, [dateOverrides]);
 
-  // Initialize avatar at the highest opened day (or the first day if none)
+  const getDayState = useCallback((day: DayData) => {
+    if (openedDays[day.id]) return DayState.OPENED;
+    const now = new Date();
+    now.setHours(0,0,0,0);
+    const unlockTimestamp = new Date(day.fullDate + 'T00:00:00').getTime();
+    return now.getTime() >= unlockTimestamp ? DayState.UNLOCKED : DayState.LOCKED;
+  }, [openedDays, effectiveDays]);
+
+  const lastUnlockedIndex = useMemo(() => {
+    return effectiveDays.reduce((acc, day, index) => {
+        return getDayState(day) !== DayState.LOCKED ? index : acc;
+    }, -1);
+  }, [effectiveDays, getDayState]);
+
   const [currentAvatarIndex, setCurrentAvatarIndex] = useState(() => {
-    const openedIds = Object.keys(openedDays).map(Number);
-    if (openedIds.length === 0) return 0;
-    return Math.max(...openedIds) - 1; // Convert ID (1-based) to Index (0-based)
+    return lastUnlockedIndex < 0 ? 0 : lastUnlockedIndex;
   });
 
   useEffect(() => {
@@ -64,28 +84,9 @@ function App() {
     localStorage.setItem(THEME_STORAGE_KEY, currentThemeId);
   }, [currentThemeId]);
   
-  const effectiveDays = useMemo(() => {
-    return VALENTINE_DAYS.map(day => ({
-      ...day,
-      fullDate: dateOverrides[day.id] || day.fullDate,
-      date: dateOverrides[day.id] 
-        ? new Date(dateOverrides[day.id]).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })
-        : day.date
-    }));
-  }, [dateOverrides]);
-
-  const getDayState = useCallback((day: DayData) => {
-    if (openedDays[day.id]) return DayState.OPENED;
-    const now = new Date();
-    now.setHours(0,0,0,0);
-    const unlockTimestamp = new Date(day.fullDate + 'T00:00:00').getTime();
-    return now.getTime() >= unlockTimestamp ? DayState.UNLOCKED : DayState.LOCKED;
-  }, [openedDays]);
-
   const handleDayClick = (day: DayData) => {
     const state = getDayState(day);
     if (state === DayState.LOCKED) {
-        // Show cheesy toast
         const randomMsg = LOCKED_MESSAGES[Math.floor(Math.random() * LOCKED_MESSAGES.length)];
         setLockedToastMessage(randomMsg);
         return;
@@ -93,18 +94,13 @@ function App() {
 
     const clickedIndex = effectiveDays.findIndex(d => d.id === day.id);
 
-    // If clicking a new unlocked day that is AHEAD of current position
-    if (state === DayState.UNLOCKED && clickedIndex > currentAvatarIndex) {
-      // 1. Move Avatar
+    if (clickedIndex !== currentAvatarIndex) {
       setCurrentAvatarIndex(clickedIndex);
-      
-      // 2. Wait for animation (2s) then Open Modal
       setTimeout(() => {
         setSelectedDay(day);
         setIsModalOpen(true);
       }, 2000);
     } else {
-      // If clicking history (already opened) or current spot, open immediately
       setSelectedDay(day);
       setIsModalOpen(true);
     }
@@ -113,10 +109,12 @@ function App() {
   const handleModalClose = (emoji: string | ReactNode) => {
     setIsModalOpen(false);
     if (selectedDay) {
-      const newOpened = { ...openedDays, [selectedDay.id]: true };
-      setOpenedDays(newOpened);
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(newOpened));
-      setShowerEmoji(emoji);
+      if (!openedDays[selectedDay.id]) {
+        const newOpened = { ...openedDays, [selectedDay.id]: true };
+        setOpenedDays(newOpened);
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(newOpened));
+        setShowerEmoji(emoji);
+      }
     }
   };
 
@@ -126,10 +124,10 @@ function App() {
   };
 
   return (
-    <div className="min-h-screen bg-love-50 overflow-hidden font-sans text-love-900 transition-colors duration-500 pb-20">
+    <div className="h-screen bg-love-50 overflow-hidden font-sans text-love-900 transition-colors duration-500 flex flex-col">
       <FloatingBackground themeId={currentThemeId} />
 
-      <header className="sticky top-0 z-30 bg-love-50/80 backdrop-blur-md shadow-sm border-b border-love-100 transition-colors duration-500">
+      <header className="sticky top-0 z-30 bg-love-50/80 backdrop-blur-md shadow-sm border-b border-love-100 transition-colors duration-500 shrink-0">
         <div className="max-w-md mx-auto px-4 py-3 flex items-center justify-between">
           <h1 className="text-2xl font-handwriting font-bold text-love-600 flex items-center gap-2 animate-pulse-fast">
             <Heart className="w-5 h-5 fill-love-500" />
@@ -152,7 +150,7 @@ function App() {
         </div>
       </header>
 
-      <main className="relative z-10">
+      <main className="relative z-10 flex-1 overflow-hidden">
         <Timeline 
           days={effectiveDays} 
           getDoyState={getDayState} 
@@ -166,7 +164,7 @@ function App() {
           day={selectedDay} 
           isOpen={isModalOpen} 
           onClose={handleModalClose}
-          dayState={openedDays[selectedDay.id] ? DayState.OPENED : DayState.UNLOCKED}
+          dayState={getDayState(selectedDay)}
         />
       )}
 
@@ -197,7 +195,6 @@ function App() {
 
       <EmojiRain emoji={showerEmoji || '❤️'} isActive={!!showerEmoji} onComplete={() => setShowerEmoji(null)} />
       
-      {/* Interactive Features */}
       <LoveJar />
       <MusicPlayer />
     </div>

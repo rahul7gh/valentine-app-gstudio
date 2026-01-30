@@ -6,11 +6,16 @@ const PLAYLIST = [
   { title: "Sweet Love", artist: "Bensound", url: "https://www.bensound.com/bensound-music/bensound-love.mp3" },
   { title: "Acoustic Breeze", artist: "Bensound", url: "https://www.bensound.com/bensound-music/bensound-acousticbreeze.mp3" },
   { title: "Tenderness", artist: "Bensound", url: "https://www.bensound.com/bensound-music/bensound-tenderness.mp3" },
-  { title: "Sunny Day", artist: "Bensound", url: "https://www.bensound.com/bensound-music/bensound-sunny.mp3" }
+  { title: "Sunny Day", artist: "Bensound", url: "https://www.bensound.com/bensound-music/bensound-sunny.mp3" },
+  { title: "Memories", artist: "Bensound", url: "https://www.bensound.com/bensound-music/bensound-memories.mp3" },
+  { title: "Better Days", artist: "Bensound", url: "https://www.bensound.com/bensound-music/bensound-betterdays.mp3" },
+  { title: "Dreams", artist: "Bensound", url: "https://www.bensound.com/bensound-music/bensound-dreams.mp3" },
+  { title: "Adventure", artist: "Bensound", url: "https://www.bensound.com/bensound-music/bensound-adventure.mp3" },
+  { title: "Slow Motion", artist: "Bensound", url: "https://www.bensound.com/bensound-music/bensound-slowmotion.mp3" }
 ];
 
 export const MusicPlayer: React.FC = () => {
-  const [isPlaying, setIsPlaying] = useState(false);
+  const [isPlaying, setIsPlaying] = useState(true); // Auto-play enabled by default
   const [isExpanded, setIsExpanded] = useState(false);
   const [currentTrackIndex, setCurrentTrackIndex] = useState(0);
   const audioRef = useRef<HTMLAudioElement | null>(null);
@@ -18,20 +23,35 @@ export const MusicPlayer: React.FC = () => {
   const currentTrack = PLAYLIST[currentTrackIndex];
 
   useEffect(() => {
-    // When track changes, reload and play if it was already playing
     if (audioRef.current) {
-      audioRef.current.load();
+      // For initial load or track change
       if (isPlaying) {
         const playPromise = audioRef.current.play();
         if (playPromise !== undefined) {
-            playPromise.catch(e => {
-                console.log("Playback interrupted or blocked", e);
-                setIsPlaying(false);
+            playPromise.catch(error => {
+                console.log("Autoplay prevented by browser policy. Waiting for interaction.");
+                setIsPlaying(false); // Update UI to show paused state
+                
+                // Add a one-time listener to start playback on first interaction
+                const startAudio = () => {
+                    if (audioRef.current) {
+                        audioRef.current.play()
+                            .then(() => setIsPlaying(true))
+                            .catch(e => console.error("Playback failed:", e));
+                    }
+                    document.removeEventListener('click', startAudio);
+                    document.removeEventListener('touchstart', startAudio);
+                    document.removeEventListener('keydown', startAudio);
+                };
+
+                document.addEventListener('click', startAudio);
+                document.addEventListener('touchstart', startAudio);
+                document.addEventListener('keydown', startAudio);
             });
         }
       }
     }
-  }, [currentTrackIndex]);
+  }, [currentTrackIndex]); // Runs on mount (initial play) and when track changes
 
   const togglePlay = (e?: React.MouseEvent) => {
     e?.stopPropagation();
@@ -59,7 +79,7 @@ export const MusicPlayer: React.FC = () => {
     <div className="fixed bottom-4 right-4 z-[60] flex flex-col items-end gap-3">
       <audio 
         ref={audioRef} 
-        loop 
+        loop={false} // Allow onEnded to trigger next track
         src={currentTrack.url}
         onEnded={nextTrack}
       />
