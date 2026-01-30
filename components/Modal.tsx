@@ -2,7 +2,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { DayData, DayState } from '../types';
 import { Loader } from './Loader';
-import { X, Heart, Mail, Sparkles, ChevronLeft, ChevronRight, Upload, Send, Paperclip } from 'lucide-react';
+import { X, Heart, Mail, Sparkles, ChevronLeft, ChevronRight, Upload, Send, Paperclip, Image as ImageIcon, Flag } from 'lucide-react';
 import { Confetti } from './Confetti';
 import { GeminiPoet } from './GeminiPoet';
 
@@ -224,19 +224,31 @@ export const Modal: React.FC<ModalProps> = ({ day, isOpen, onClose, dayState }) 
                     <p className="font-serif text-lg leading-relaxed text-love-900/90 italic">{day.view2.text}</p>
 
                     {day.view2.challenge && (
-                        <div className="bg-white/60 backdrop-blur-sm border-2 border-love-200 p-5 rounded-2xl shadow-sm relative overflow-hidden transition-all hover:shadow-md">
-                            <div className="absolute top-0 right-0 p-2 opacity-10">
-                                <Sparkles className="text-love-600 w-12 h-12" />
-                            </div>
-                            
-                            <h4 className="font-bold text-xs text-love-600 uppercase tracking-widest mb-2 flex items-center gap-2">
-                                <Sparkles className="w-3 h-3" /> Today's Mission
-                            </h4>
-                            <p className="text-love-900 font-medium mb-4 leading-relaxed">
-                                {day.view2.challenge}
-                            </p>
+                        <div className="relative overflow-hidden rounded-3xl border-2 border-love-200 bg-gradient-to-br from-white via-love-50 to-love-100 shadow-xl shadow-love-100/50 p-6 transition-all hover:scale-[1.01] hover:shadow-2xl">
+                            {/* Decorative Background Elements */}
+                            <div className="absolute -top-10 -right-10 w-32 h-32 bg-love-200/30 rounded-full blur-2xl pointer-events-none"></div>
+                            <div className="absolute -bottom-10 -left-10 w-24 h-24 bg-love-300/20 rounded-full blur-xl pointer-events-none"></div>
 
-                            <div className="bg-love-50 rounded-xl border border-love-200 p-3 flex flex-col gap-3">
+                            {/* Header Badge */}
+                            <div className="flex items-center justify-between mb-4">
+                                <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-love-100 border border-love-200 shadow-sm">
+                                    <Sparkles className="w-3 h-3 text-love-600 animate-pulse" />
+                                    <span className="text-[10px] font-bold tracking-widest uppercase text-love-700">Daily Mission</span>
+                                </div>
+                                <div className="p-2 bg-white rounded-full shadow-sm border border-love-100">
+                                    <Flag className="w-4 h-4 text-love-500" />
+                                </div>
+                            </div>
+
+                            {/* Mission Text */}
+                            <div className="relative z-10 mb-6 text-center">
+                                <p className="font-serif text-lg leading-relaxed text-love-900 font-medium italic">
+                                    "{day.view2.challenge}"
+                                </p>
+                            </div>
+
+                            {/* Interaction Area */}
+                            <div className="relative z-10 flex flex-col gap-3">
                                 <input 
                                     type="file" 
                                     ref={fileInputRef}
@@ -248,17 +260,34 @@ export const Modal: React.FC<ModalProps> = ({ day, isOpen, onClose, dayState }) 
                                 {!missionFile ? (
                                     <button 
                                         onClick={() => fileInputRef.current?.click()}
-                                        className="w-full py-2 border-2 border-dashed border-love-300 rounded-lg text-love-500 font-bold text-sm hover:bg-love-100 transition-colors flex items-center justify-center gap-2"
+                                        className="group relative w-full h-24 border-2 border-dashed border-love-300 bg-white/50 hover:bg-white rounded-2xl flex flex-col items-center justify-center gap-2 transition-all duration-300 hover:border-love-500 hover:shadow-md"
                                     >
-                                        <Upload className="w-4 h-4" /> Upload Proof
+                                        <div className="w-10 h-10 rounded-full bg-love-100 group-hover:bg-love-200 flex items-center justify-center transition-colors">
+                                            <Upload className="w-5 h-5 text-love-600 group-hover:scale-110 transition-transform" />
+                                        </div>
+                                        <span className="text-xs font-semibold text-love-400 group-hover:text-love-600">Tap to upload proof</span>
                                     </button>
                                 ) : (
-                                    <div className="flex items-center justify-between bg-love-100 px-3 py-2 rounded-lg">
-                                        <div className="flex items-center gap-2 overflow-hidden">
-                                            <Paperclip className="w-4 h-4 text-love-600 flex-shrink-0" />
-                                            <span className="text-xs text-love-800 truncate font-medium max-w-[150px]">{missionFile.name}</span>
+                                    <div className="bg-white border border-love-200 rounded-2xl p-3 flex items-center justify-between shadow-sm animate-fade-in-up">
+                                        <div className="flex items-center gap-3 overflow-hidden">
+                                            <div className="w-10 h-10 rounded-xl bg-love-100 flex items-center justify-center flex-shrink-0">
+                                                {missionFile.type.startsWith('image/') ? (
+                                                    <ImageIcon className="w-5 h-5 text-love-600" />
+                                                ) : (
+                                                    <Paperclip className="w-5 h-5 text-love-600" />
+                                                )}
+                                            </div>
+                                            <div className="flex flex-col min-w-0">
+                                                <span className="text-xs font-bold text-love-800 truncate block max-w-[140px]">{missionFile.name}</span>
+                                                <span className="text-[10px] text-love-400">Ready to send</span>
+                                            </div>
                                         </div>
-                                        <button onClick={() => setMissionFile(null)} className="text-love-400 hover:text-love-600"><X className="w-4 h-4" /></button>
+                                        <button 
+                                            onClick={(e) => { e.stopPropagation(); setMissionFile(null); }}
+                                            className="p-2 hover:bg-love-50 rounded-full text-love-400 hover:text-red-500 transition-colors"
+                                        >
+                                            <X className="w-4 h-4" />
+                                        </button>
                                     </div>
                                 )}
 
@@ -266,18 +295,20 @@ export const Modal: React.FC<ModalProps> = ({ day, isOpen, onClose, dayState }) 
                                     onClick={handleSendMission}
                                     disabled={!missionFile}
                                     className={`
-                                        w-full py-2 rounded-lg font-bold text-sm flex items-center justify-center gap-2 transition-all shadow-sm
+                                        w-full py-3.5 rounded-xl font-bold text-sm flex items-center justify-center gap-2 shadow-lg transition-all duration-300
                                         ${missionFile 
-                                            ? 'bg-love-500 text-white hover:bg-love-600 hover:shadow-md active:scale-95' 
-                                            : 'bg-gray-200 text-gray-400 cursor-not-allowed'}
+                                            ? 'bg-gradient-to-r from-love-500 to-love-600 text-white shadow-love-500/30 hover:shadow-love-500/50 hover:scale-[1.02] active:scale-95' 
+                                            : 'bg-gray-100 text-gray-400 cursor-not-allowed shadow-none'}
                                     `}
                                 >
-                                    <Send className="w-4 h-4" /> Submit Mission
+                                    <Send className={`w-4 h-4 ${missionFile ? 'animate-pulse' : ''}`} />
+                                    <span>Complete Mission</span>
                                 </button>
                             </div>
+                            
                             {missionFile && (
-                                <p className="text-[10px] text-center text-love-400 mt-2 italic">
-                                    * Click submit to open email app. Don't forget to attach the file!
+                                <p className="text-[10px] text-center text-love-400 mt-3 animate-fade-in">
+                                    <span className="font-semibold">*Note:</span> Email app will open. Please attach the file there!
                                 </p>
                             )}
                         </div>
