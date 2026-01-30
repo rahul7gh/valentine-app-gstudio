@@ -28,8 +28,8 @@ export const MusicPlayer: React.FC = () => {
       if (isPlaying) {
         const playPromise = audioRef.current.play();
         if (playPromise !== undefined) {
-            playPromise.catch(error => {
-                console.log("Autoplay prevented by browser policy. Waiting for interaction.", error);
+            playPromise.catch(() => {
+                console.log("Autoplay prevented by browser policy. Waiting for interaction.");
                 setIsPlaying(false); // Update UI to show paused state
                 
                 // Add a one-time listener to start playback on first interaction

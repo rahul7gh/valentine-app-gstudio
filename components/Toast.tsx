@@ -8,7 +8,7 @@ interface ToastProps {
     themeId?: string;
 }
 
-export const Toast: React.FC<ToastProps> = ({ message, onClose, themeId }) => {
+export const Toast: React.FC<ToastProps> = ({ message, onClose }) => {
     useEffect(() => {
         const timer = setTimeout(onClose, 2500);
         return () => clearTimeout(timer);
