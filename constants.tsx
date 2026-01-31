@@ -142,7 +142,7 @@ export const VALENTINE_DAYS: DayData[] = [
       title: "Marry Me (Again?)",
       images: ["https://picsum.photos/400/500?random=21", "https://picsum.photos/400/500?random=22"],
       text: "Every day I wake up and choose you. I can't wait to make it official.",
-      challenge: "Send me a voice note saying 'Yes!'",
+      challenge: "Photograph something that represents “us” to you",
       aiPromptTheme: "eternal promises and the joy of choosing each other forever",
       buttonLabel: "Say Yes!",
       closingSalutation: "Yours eternally,"
@@ -164,7 +164,7 @@ export const VALENTINE_DAYS: DayData[] = [
       title: "Sweet Treats",
       images: ["https://picsum.photos/400/500?random=31", "https://picsum.photos/400/500?random=32"],
       text: "Sharing snacks and sweet moments with you is my favorite thing to do.",
-      challenge: "Eat your favorite treat today and think of me!",
+      challenge: "Take a photo of your favorite chocolate's two pieces of chocolate side by side",
       aiPromptTheme: "the sweetness of love and how life with you is a treat",
       buttonLabel: "Yum!",
       closingSalutation: "Sweetly yours,"
@@ -186,7 +186,7 @@ export const VALENTINE_DAYS: DayData[] = [
       title: "Soft & Cuddly",
       images: ["https://picsum.photos/400/500?random=41", "https://picsum.photos/400/500?random=42"],
       text: "I promise to always be soft for you, to be your comfort when the world is hard.",
-      challenge: "Wear your comfiest pajamas tonight.",
+      challenge: "Photograph something that makes you feel safe or comforted today(something that really calms you down..)",
       aiPromptTheme: "warm hugs, softness, and the comfort of your presence",
       buttonLabel: "Snuggle Up",
       closingSalutation: "Beary much yours,"
@@ -208,7 +208,7 @@ export const VALENTINE_DAYS: DayData[] = [
       title: "My Vow",
       images: ["https://picsum.photos/400/500?random=51", "https://picsum.photos/400/500?random=52"],
       text: "I promise to hold your hand through the good times and the bad. You never have to walk alone.",
-      challenge: "Send me a photo of your hand reaching out to mine.",
+      challenge: "Write one promise for us on paper and photograph it",
       aiPromptTheme: "commitment, loyalty, and the sacred vows we will soon take",
       buttonLabel: "I Promise",
       closingSalutation: "Forever committed,"
@@ -230,7 +230,7 @@ export const VALENTINE_DAYS: DayData[] = [
       title: "The Perfect Fit",
       images: ["https://picsum.photos/400/500?random=61", "https://picsum.photos/400/500?random=62"],
       text: "Your hugs heal everything. I'm sending you the biggest, tightest squeeze right now!",
-      challenge: "Squeeze yourself tight for 5 seconds and feel my love.",
+      challenge: "Photo of two chairs / pillows / shoes next to each other",
       aiPromptTheme: "the security and warmth of a lifelong embrace",
       buttonLabel: "Squeeze Me",
       closingSalutation: "Holding you tight,"
@@ -252,7 +252,7 @@ export const VALENTINE_DAYS: DayData[] = [
       title: "Kisses for You",
       images: ["https://picsum.photos/400/500?random=71", "https://picsum.photos/400/500?random=72"],
       text: "One kiss is all it takes to make my heart race. I love you!",
-      challenge: "Send me a kiss emoji 😘",
+      challenge: "Create a small hand crafted note for me and share the picture (Keep the theme of the day in mind🤭)",
       aiPromptTheme: "passion, affection, and the thrill of your kiss",
       buttonLabel: "Mwah!",
       closingSalutation: "With endless kisses,"
@@ -274,7 +274,7 @@ export const VALENTINE_DAYS: DayData[] = [
       title: "My Forever Valentine",
       images: ["https://picsum.photos/400/500?random=81", "https://picsum.photos/400/500?random=82"],
       text: "You are the best thing that ever happened to me. Happy Valentine's Day, my wife-to-be!",
-      challenge: "Get ready for our special date tonight! I love you.",
+      challenge: "Photo of your two favorite things side by side",
       aiPromptTheme: "the culmination of our love and our first Valentine as engaged partners",
       buttonLabel: "Forever Yours",
       closingSalutation: "Your Valentine,"
