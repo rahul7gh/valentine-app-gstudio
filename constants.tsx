@@ -113,7 +113,7 @@ export const VALENTINE_DAYS: DayData[] = [
     emoji: "🌹",
     loadingMessage: "Picking the best rose for you...",
     view1: {
-      gifUrl: "day1.webp", // Bear holding rose
+      gifUrl: "/modal1/rose_day.webp",
       citeText: "Just like this rose, my love for you blooms more every single day."
     },
     view2: {
@@ -135,7 +135,7 @@ export const VALENTINE_DAYS: DayData[] = [
     emoji: "💍",
     loadingMessage: "Getting down on one knee...",
     view1: {
-      gifUrl: "day2.webp", // Bear proposing
+      gifUrl: "/modal1/propose_day.webp",
       citeText: "No grand words… just me, choosing you, every day."
     },
     view2: {
@@ -157,7 +157,7 @@ export const VALENTINE_DAYS: DayData[] = [
     emoji: "🍫",
     loadingMessage: "Unwrapping something sweet...",
     view1: {
-      gifUrl: "day3.webp", // Bears eating
+      gifUrl: "/modal1/chocolate_day.webp",
       citeText: "Sweet like this chocolate, warm like the way you make me feel."
     },
     view2: {
@@ -179,7 +179,7 @@ export const VALENTINE_DAYS: DayData[] = [
     emoji: "🧸",
     loadingMessage: "Sending fluffy vibes...",
     view1: {
-      gifUrl: "day4.webp", // Happy bears / hugging
+      gifUrl: "/modal1/teddy_day.webp",
       citeText: "This one’s for you to hold—until I can!"
     },
     view2: {
@@ -201,7 +201,7 @@ export const VALENTINE_DAYS: DayData[] = [
     emoji: "🎀",
     loadingMessage: "Making a pinky promise...",
     view1: {
-      gifUrl: "day5.webp", // Holding hands
+      gifUrl: "/modal1/promise_day.webp",
       citeText: "Hand in hand, I promise to walk this life with you."
     },
     view2: {
@@ -223,7 +223,7 @@ export const VALENTINE_DAYS: DayData[] = [
     emoji: CustomHugEmoji,
     loadingMessage: "Squeezing tight...",
     view1: {
-      gifUrl: "day6.webp", // Tight hug
+      gifUrl: "/modal1/hug_day.webp",
       citeText: "This hug is my favorite place—right where you are."
     },
     view2: {
@@ -245,7 +245,7 @@ export const VALENTINE_DAYS: DayData[] = [
     emoji: "💋",
     loadingMessage: "Puckering up...",
     view1: {
-      gifUrl: "day7.webp", // Kissing
+      gifUrl: "/modal1/kiss_day.webp",
       citeText: "A small kiss, carrying all the love I don’t always say"
     },
     view2: {
@@ -267,7 +267,7 @@ export const VALENTINE_DAYS: DayData[] = [
     emoji: "❤️",
     loadingMessage: "Here is my heart...",
     view1: {
-      gifUrl: "day8.webp", // Heart / Sitting together
+      gifUrl: "/modal1/valentine_day.webp",
       citeText: "Loving you, just as you are, is my greatest joy"
     },
     view2: {
