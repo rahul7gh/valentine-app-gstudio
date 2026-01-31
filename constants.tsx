@@ -118,7 +118,7 @@ export const VALENTINE_DAYS: DayData[] = [
     },
     view2: {
       title: "For My Beautiful Rose",
-      images: ["https://picsum.photos/400/500?random=11", "https://picsum.photos/400/500?random=12"],
+      images: ["/modal2/rose_day.png"],
       text: "You are the most beautiful flower in the garden of my life. Happy Rose Day, my love!",
       challenge: "Find a flower (or draw one!) and send me a picture.",
       aiPromptTheme: "roses and the beauty of a new blossoming marriage",
@@ -140,7 +140,7 @@ export const VALENTINE_DAYS: DayData[] = [
     },
     view2: {
       title: "Marry Me (Again?)",
-      images: ["https://picsum.photos/400/500?random=21", "https://picsum.photos/400/500?random=22"],
+      images: ["/modal2/propose_day.png"],
       text: "Every day I wake up and choose you. I can't wait to make it official.",
       challenge: "Photograph something that represents “us” to you",
       aiPromptTheme: "eternal promises and the joy of choosing each other forever",
@@ -162,7 +162,7 @@ export const VALENTINE_DAYS: DayData[] = [
     },
     view2: {
       title: "Sweet Treats",
-      images: ["https://picsum.photos/400/500?random=31", "https://picsum.photos/400/500?random=32"],
+      images: ["/modal2/chocolate_day.png"],
       text: "Sharing snacks and sweet moments with you is my favorite thing to do.",
       challenge: "Take a photo of your favorite chocolate's two pieces of chocolate side by side",
       aiPromptTheme: "the sweetness of love and how life with you is a treat",
@@ -184,7 +184,7 @@ export const VALENTINE_DAYS: DayData[] = [
     },
     view2: {
       title: "Soft & Cuddly",
-      images: ["https://picsum.photos/400/500?random=41", "https://picsum.photos/400/500?random=42"],
+      images: ["/modal2/teddy_day.png"],
       text: "I promise to always be soft for you, to be your comfort when the world is hard.",
       challenge: "Photograph something that makes you feel safe or comforted today(something that really calms you down..)",
       aiPromptTheme: "warm hugs, softness, and the comfort of your presence",
@@ -206,7 +206,7 @@ export const VALENTINE_DAYS: DayData[] = [
     },
     view2: {
       title: "My Vow",
-      images: ["https://picsum.photos/400/500?random=51", "https://picsum.photos/400/500?random=52"],
+      images: ["/modal2/promise_day.png"],
       text: "I promise to hold your hand through the good times and the bad. You never have to walk alone.",
       challenge: "Write one promise for us on paper and photograph it",
       aiPromptTheme: "commitment, loyalty, and the sacred vows we will soon take",
@@ -228,7 +228,7 @@ export const VALENTINE_DAYS: DayData[] = [
     },
     view2: {
       title: "The Perfect Fit",
-      images: ["https://picsum.photos/400/500?random=61", "https://picsum.photos/400/500?random=62"],
+      images: ["/modal2/hug_day.png"],
       text: "Your hugs heal everything. I'm sending you the biggest, tightest squeeze right now!",
       challenge: "Photo of two chairs / pillows / shoes next to each other",
       aiPromptTheme: "the security and warmth of a lifelong embrace",
@@ -250,7 +250,7 @@ export const VALENTINE_DAYS: DayData[] = [
     },
     view2: {
       title: "Kisses for You",
-      images: ["https://picsum.photos/400/500?random=71", "https://picsum.photos/400/500?random=72"],
+      images: ["/modal2/kiss_day.png"],
       text: "One kiss is all it takes to make my heart race. I love you!",
       challenge: "Create a small hand crafted note for me and share the picture (Keep the theme of the day in mind🤭)",
       aiPromptTheme: "passion, affection, and the thrill of your kiss",
@@ -272,7 +272,7 @@ export const VALENTINE_DAYS: DayData[] = [
     },
     view2: {
       title: "My Forever Valentine",
-      images: ["https://picsum.photos/400/500?random=81", "https://picsum.photos/400/500?random=82"],
+      images: ["/modal2/valentine_day.png"],
       text: "You are the best thing that ever happened to me. Happy Valentine's Day, my wife-to-be!",
       challenge: "Photo of your two favorite things side by side",
       aiPromptTheme: "the culmination of our love and our first Valentine as engaged partners",

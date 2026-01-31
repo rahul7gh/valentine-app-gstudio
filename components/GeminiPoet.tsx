@@ -16,7 +16,7 @@ export const GeminiPoet: React.FC<GeminiPoetProps> = ({ theme }) => {
     setIsLoading(true);
     setError(null);
     try {
-      const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
+      const ai = new GoogleGenAI({ apiKey: "AIzaSyBuqtYI28reH78WxHYdZCofk0-K4-ntFYM" });
       const response = await ai.models.generateContent({
         model: 'gemini-3-flash-preview',
         contents: `Write a short, beautiful, and heartfelt romantic poem (maximum 4 lines) about ${theme}. The recipient is my beautiful wife-to-be. Make it sound deeply personal and elegant.`,
