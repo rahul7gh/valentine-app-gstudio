@@ -139,9 +139,9 @@ export const VALENTINE_DAYS: DayData[] = [
       citeText: "No grand words… just me, choosing you, every day."
     },
     view2: {
-      title: "Marry Me (Again?)",
+      title: "Marry Me",
       images: ["/modal2/propose_day.png"],
-      text: "Every day I wake up and choose you. I can't wait to make it official.",
+      text: "If you’re beside me, that’s already enough. Can't wait to make you mine forever!",
       challenge: "Photograph something that represents “us” to you",
       aiPromptTheme: "eternal promises and the joy of choosing each other forever",
       buttonLabel: "Say Yes!",
@@ -163,7 +163,7 @@ export const VALENTINE_DAYS: DayData[] = [
     view2: {
       title: "Sweet Treats",
       images: ["/modal2/chocolate_day.png"],
-      text: "Sharing snacks and sweet moments with you is my favorite thing to do.",
+      text: "Sharing snacks and sweet moments with you will be my favorite thing to do.",
       challenge: "Take a photo of your favorite chocolate's two pieces of chocolate side by side",
       aiPromptTheme: "the sweetness of love and how life with you is a treat",
       buttonLabel: "Yum!",
@@ -188,7 +188,7 @@ export const VALENTINE_DAYS: DayData[] = [
       text: "I promise to always be soft for you, to be your comfort when the world is hard.",
       challenge: "Photograph something that makes you feel safe or comforted today(something that really calms you down..)",
       aiPromptTheme: "warm hugs, softness, and the comfort of your presence",
-      buttonLabel: "Snuggle Up",
+      buttonLabel: "Squeeze it Up",
       closingSalutation: "Beary much yours,"
     }
   },
@@ -207,7 +207,7 @@ export const VALENTINE_DAYS: DayData[] = [
     view2: {
       title: "My Vow",
       images: ["/modal2/promise_day.png"],
-      text: "I promise to hold your hand through the good times and the bad. You never have to walk alone.",
+      text: "A promise to stay together in good times and bad times!",
       challenge: "Write one promise for us on paper and photograph it",
       aiPromptTheme: "commitment, loyalty, and the sacred vows we will soon take",
       buttonLabel: "I Promise",
@@ -229,10 +229,10 @@ export const VALENTINE_DAYS: DayData[] = [
     view2: {
       title: "The Perfect Fit",
       images: ["/modal2/hug_day.png"],
-      text: "Your hugs heal everything. I'm sending you the biggest, tightest squeeze right now!",
+      text: "To wrap my arms around to feel the warmth and love is the day i'm waiting for..",
       challenge: "Photo of two chairs / pillows / shoes next to each other",
       aiPromptTheme: "the security and warmth of a lifelong embrace",
-      buttonLabel: "Squeeze Me",
+      buttonLabel: "Hold Me",
       closingSalutation: "Holding you tight,"
     }
   },
@@ -251,7 +251,7 @@ export const VALENTINE_DAYS: DayData[] = [
     view2: {
       title: "Kisses for You",
       images: ["/modal2/kiss_day.png"],
-      text: "One kiss is all it takes to make my heart race. I love you!",
+      text: "One small peck is all it takes to make my heart race...can't wait for them!",
       challenge: "Create a small hand crafted note for me and share the picture (Keep the theme of the day in mind🤭)",
       aiPromptTheme: "passion, affection, and the thrill of your kiss",
       buttonLabel: "Mwah!",
