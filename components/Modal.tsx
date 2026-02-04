@@ -108,7 +108,7 @@ export const Modal: React.FC<ModalProps> = ({ day, isOpen, onClose, dayState }) 
     if (!missionFile) return;
     
     const subject = encodeURIComponent(`Mission Update: ${day.dayName} 💖`);
-    const body = encodeURIComponent(`Hi Love,\n\nI completed today's mission: "${day.view2.challenge}"\n\nI'm attaching the proof to this email!\n\nLove,\nYour Wifey`);
+    const body = encodeURIComponent(`Hi Dudu,\n\nI completed today's mission: "${day.view2.challenge}"\n\nI'm attaching the picture to this email!,\nYour Bubu`);
     
     // User feedback
     alert("Opening your email app... Please attach the file you selected to send it to me! 💌");

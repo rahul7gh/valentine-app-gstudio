@@ -12,6 +12,7 @@ import { VALENTINE_DAYS, THEMES, LOCKED_MESSAGES } from './constants';
 import { DayData, DayState, StoredState } from './types';
 import { Heart, Settings, Wand2 } from 'lucide-react';
 import "./App.css"
+import PasswordModal from './components/PasswordModal';
 
 const STORAGE_KEY = 'valentine_app_progress';
 const ADMIN_STORAGE_KEY = 'valentine_date_overrides';
@@ -43,15 +44,16 @@ function App() {
   const [selectedDay, setSelectedDay] = useState<DayData | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isAdminOpen, setIsAdminOpen] = useState(false);
+  const [showPasswordModal, setShowPasswordModal] = useState(false);
   const [isThemePickerOpen, setIsThemePickerOpen] = useState(false);
   const [showerEmoji, setShowerEmoji] = useState<string | ReactNode | null>(null);
   const [lockedToastMessage, setLockedToastMessage] = useState<string | null>(null);
-  
+
   const effectiveDays = useMemo(() => {
     return VALENTINE_DAYS.map(day => ({
       ...day,
       fullDate: dateOverrides[day.id] || day.fullDate,
-      date: dateOverrides[day.id] 
+      date: dateOverrides[day.id]
         ? new Date(dateOverrides[day.id] + 'T00:00:00').toLocaleDateString('en-US', { month: 'short', day: 'numeric' })
         : day.date
     }));
@@ -60,14 +62,14 @@ function App() {
   const getDayState = useCallback((day: DayData) => {
     if (openedDays[day.id]) return DayState.OPENED;
     const now = new Date();
-    now.setHours(0,0,0,0);
+    now.setHours(0, 0, 0, 0);
     const unlockTimestamp = new Date(day.fullDate + 'T00:00:00').getTime();
     return now.getTime() >= unlockTimestamp ? DayState.UNLOCKED : DayState.LOCKED;
   }, [openedDays, effectiveDays]);
 
   const lastUnlockedIndex = useMemo(() => {
     return effectiveDays.reduce((acc, day, index) => {
-        return getDayState(day) !== DayState.LOCKED ? index : acc;
+      return getDayState(day) !== DayState.LOCKED ? index : acc;
     }, -1);
   }, [effectiveDays, getDayState]);
 
@@ -83,13 +85,13 @@ function App() {
     });
     localStorage.setItem(THEME_STORAGE_KEY, currentThemeId);
   }, [currentThemeId]);
-  
+
   const handleDayClick = (day: DayData) => {
     const state = getDayState(day);
     if (state === DayState.LOCKED) {
-        const randomMsg = LOCKED_MESSAGES[Math.floor(Math.random() * LOCKED_MESSAGES.length)];
-        setLockedToastMessage(randomMsg);
-        return;
+      const randomMsg = LOCKED_MESSAGES[Math.floor(Math.random() * LOCKED_MESSAGES.length)];
+      setLockedToastMessage(randomMsg);
+      return;
     }
 
     const clickedIndex = effectiveDays.findIndex(d => d.id === day.id);
@@ -134,59 +136,59 @@ function App() {
             Infinity & Beyond
           </h1>
           <div className="flex gap-1">
-             <button 
-                onClick={() => setIsThemePickerOpen(true)} 
-                className="p-2 text-love-400 hover:text-love-600 active:scale-90 transition-all"
-             >
-                <Wand2 className="w-5 h-5" />
-             </button>
-             <button 
-                onClick={() => setIsAdminOpen(true)} 
-                className="p-2 text-love-300 hover:text-love-600 active:scale-90 transition-all"
-             >
-                <Settings className="w-5 h-5" />
-             </button>
+            <button
+              onClick={() => setIsThemePickerOpen(true)}
+              className="p-2 text-love-400 hover:text-love-600 active:scale-90 transition-all"
+            >
+              <Wand2 className="w-5 h-5" />
+            </button>
+            <button
+              onClick={() => setShowPasswordModal(true)}
+              className="p-2 text-love-300 hover:text-love-600 active:scale-90 transition-all"
+            >
+              <Settings className="w-5 h-5" />
+            </button>
           </div>
         </div>
       </header>
 
       <main className="relative z-10 flex-1 overflow-hidden">
-        <Timeline 
-          days={effectiveDays} 
-          getDoyState={getDayState} 
-          onDayClick={handleDayClick} 
+        <Timeline
+          days={effectiveDays}
+          getDoyState={getDayState}
+          onDayClick={handleDayClick}
           avatarIndex={currentAvatarIndex}
         />
       </main>
 
       {selectedDay && (
-        <Modal 
-          day={selectedDay} 
-          isOpen={isModalOpen} 
+        <Modal
+          day={selectedDay}
+          isOpen={isModalOpen}
           onClose={handleModalClose}
           dayState={getDayState(selectedDay)}
         />
       )}
 
       {lockedToastMessage && (
-        <Toast 
-            message={lockedToastMessage} 
-            onClose={() => setLockedToastMessage(null)} 
-            themeId={currentThemeId}
+        <Toast
+          message={lockedToastMessage}
+          onClose={() => setLockedToastMessage(null)}
+          themeId={currentThemeId}
         />
       )}
 
-      <AdminPanel 
+      <AdminPanel
         isOpen={isAdminOpen}
         onClose={() => setIsAdminOpen(false)}
-        days={VALENTINE_DAYS} 
+        days={VALENTINE_DAYS}
         dateOverrides={dateOverrides}
         currentThemeId={currentThemeId}
         onSaveDates={handleSaveOverrides}
         onSelectTheme={setCurrentThemeId}
       />
 
-      <ThemePicker 
+      <ThemePicker
         isOpen={isThemePickerOpen}
         onClose={() => setIsThemePickerOpen(false)}
         currentThemeId={currentThemeId}
@@ -194,9 +196,20 @@ function App() {
       />
 
       <EmojiRain emoji={showerEmoji || '❤️'} isActive={!!showerEmoji} onComplete={() => setShowerEmoji(null)} />
-      
+
       <LoveJar />
       <MusicPlayer />
+
+      {showPasswordModal && (<PasswordModal
+        open={showPasswordModal}
+        onClose={() => setShowPasswordModal(false)}
+        onSubmit={(password) => {
+          console.log(password);
+          setShowPasswordModal(false);
+
+          if (password === "admin123") { setIsAdminOpen(true) }
+        }}
+      />)}
     </div>
   );
 }
