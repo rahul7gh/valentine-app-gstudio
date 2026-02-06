@@ -96,7 +96,7 @@ function App() {
     // This avoids the dark background colors (50, 100) and the white colors (900).
     const vibrantShades = ['400', '500', '600', '700', '800'];
     const filtered = vibrantShades
-      .map(shade => theme.colors[shade as keyof typeof theme.colors])
+      .map(shade => theme.colors[(shade as unknown) as keyof typeof theme.colors])
       .filter(Boolean);
 
     setHeartColors(filtered);
