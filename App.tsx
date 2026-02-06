@@ -11,8 +11,9 @@ import { FloatingBackground } from './components/FloatingBackground';
 import { VALENTINE_DAYS, THEMES, LOCKED_MESSAGES } from './constants';
 import { DayData, DayState, StoredState } from './types';
 import { Heart, Settings, Wand2 } from 'lucide-react';
-import "./App.css"
+import "./App.css";
 import PasswordModal from './components/PasswordModal';
+import FloatingHearts from './components/FloatingHearts';
 
 const STORAGE_KEY = 'valentine_app_progress';
 const ADMIN_STORAGE_KEY = 'valentine_date_overrides';
@@ -48,6 +49,9 @@ function App() {
   const [isThemePickerOpen, setIsThemePickerOpen] = useState(false);
   const [showerEmoji, setShowerEmoji] = useState<string | ReactNode | null>(null);
   const [lockedToastMessage, setLockedToastMessage] = useState<string | null>(null);
+  
+  // State to hold the specific colors for the hearts
+  const [heartColors, setHeartColors] = useState<string[]>([]);
 
   const effectiveDays = useMemo(() => {
     return VALENTINE_DAYS.map(day => ({
@@ -65,7 +69,7 @@ function App() {
     now.setHours(0, 0, 0, 0);
     const unlockTimestamp = new Date(day.fullDate + 'T00:00:00').getTime();
     return now.getTime() >= unlockTimestamp ? DayState.UNLOCKED : DayState.LOCKED;
-  }, [openedDays, effectiveDays]);
+  }, [openedDays]);
 
   const lastUnlockedIndex = useMemo(() => {
     return effectiveDays.reduce((acc, day, index) => {
@@ -77,12 +81,25 @@ function App() {
     return lastUnlockedIndex < 0 ? 0 : lastUnlockedIndex;
   });
 
+  // THEME & HEART COLOR LOGIC
   useEffect(() => {
     const theme = THEMES.find(t => t.id === currentThemeId) || THEMES[0];
     const root = document.documentElement;
+
+    // Apply CSS variables to the document
     Object.entries(theme.colors).forEach(([shade, color]) => {
       root.style.setProperty(`--love-${shade}`, color);
     });
+
+    // FILTER VIBRANT COLORS FOR HEARTS:
+    // We only take shades 400, 500, 600, 700, and 800.
+    // This avoids the dark background colors (50, 100) and the white colors (900).
+    const vibrantShades = ['400', '500', '600', '700', '800'];
+    const filtered = vibrantShades
+      .map(shade => theme.colors[shade as keyof typeof theme.colors])
+      .filter(Boolean);
+
+    setHeartColors(filtered);
     localStorage.setItem(THEME_STORAGE_KEY, currentThemeId);
   }, [currentThemeId]);
 
@@ -200,16 +217,19 @@ function App() {
       <LoveJar />
       <MusicPlayer />
 
-      {showPasswordModal && (<PasswordModal
-        open={showPasswordModal}
-        onClose={() => setShowPasswordModal(false)}
-        onSubmit={(password) => {
-          console.log(password);
-          setShowPasswordModal(false);
+      {showPasswordModal && (
+        <PasswordModal
+          open={showPasswordModal}
+          onClose={() => setShowPasswordModal(false)}
+          onSubmit={(password) => {
+            setShowPasswordModal(false);
+            if (password === "admin123") { setIsAdminOpen(true); }
+          }}
+        />
+      )}
 
-          if (password === "admin123") { setIsAdminOpen(true) }
-        }}
-      />)}
+      {/* PASSING THE DYNAMIC FILTERED COLORS HERE */}
+      <FloatingHearts heartColors={heartColors} />
     </div>
   );
 }
